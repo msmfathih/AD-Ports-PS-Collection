@@ -1,0 +1,2744 @@
+{
+	"info": {
+		"_postman_id": "69426283-2277-4600-bdcc-cf6064251d5d",
+		"name": "ATLP_IC_Migration",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14307462"
+	},
+	"item": [
+		{
+			"name": "LookUps",
+			"item": [
+				{
+					"name": "DeclarationTypes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response must be having at least one lookup value\", function () {\r",
+									"    pm.expect(pm.response.json().Data[0].Code);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"value": "2.0",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "//Available decalration Types are Import, Export, Transit In, Re-Export, Transit Out, Temp Import\r\n{\r\n     \"ServiceCode\": \"17\",\r\n     \"RequestTypeCode\": \"Z\",\r\n     \"Importer\": \"\",  //importer/exporter code\r\n     \"ClearingAgent\": \"\"    //user of the Applciation\r\n }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Customs/Lookup/DeclarationTypes",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Customs",
+								"Lookup",
+								"DeclarationTypes"
+							]
+						},
+						"description": "This is lookup to get all the list of decalration types. This is same as \"GetDeclarationType\" API from TAMM services."
+					},
+					"response": []
+				},
+				{
+					"name": "GenericLookup",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var lookup_array = [\"CENTERS\",\"VESSELS\",\"COUNTRIES\",\"COUNTRYCODES\",\"SHIPPINGAGENTS\",\"BILLTYPE\",\"PORTS\",\"CARGOTYPES\",\"IMPORTERS\",\"CURRENCIES\",\"ALLAGENTS\",\"UOM\",\"CITIES\",\"EXEMPTIONS\",\"EMARA\",\"FUEL\",\"VEHICLESPECIFICATION\",\"BODYMAIN\",\"GCCCOUNTRIES\",\"VEHICLECOLOR\",\"POLICE_COLOR\",\"INTENDED_OF_USE\",\"BODY_SUBTYPE\",\"BR_MATERIAL\",\"TRUCK_PLATE_COLOR\",\"TRUCK_COUNTRIES\",\"TRUCK_PLATE_CATEGORY\",\"TRUCK_TYPE\",\"TRUCK_SUBTYPE\",\"TRUCK_CATEGORY_TYPE\",\"TRUCK_POLICE_COLOR\",\"DOCUMENTTYPE\",\"EXITCENTER\",\"COUNTRYCODES\",\"ORIGINDESTINATINOCOUNTRIES\",\"UNITOFMEASURES\",\"DEPOSITS\",\"CASHDECLARATIONTYPE\",\"PASENGERCODE\",\"JOBS\",\"CASHDECLARATIONFLAG\",\"TRANSPORTERTYPE\",\"PURPOSETYPE\",\"JOBNUMBER\",\"HSCODES\",\"ORIGINVALUATIONREQUESTTYPES\",\"PASSENGERTYPE\",\"REMARKS\",\"DUTIESREFUNDTYPES\",\"VEHICLECOUNTRIES\",\"FCAPORTSMFP_PORT_REF_CODE\",\"FCAPORTMFP_PORT_ID\",\"BANKS\",\"BANSBRANCHES\",\"VEHTYPES\",\"VEHSUBTYPES\",\"FCAPORTSUAE\",\"DECLARATIONREMARKS\",\"DCMSHIPPER\"];\r",
+									"\r",
+									"var array_length = lookup_array.length;\r",
+									"\r",
+									"pm.variables.set(\"lookupType\",lookup_array[_.random(0,array_length-1)]);\r",
+									"\r",
+									"/*\r",
+									"CENTERS\r",
+									"VESSELS\r",
+									"COUNTRIES\r",
+									"COUNTRYCODES\r",
+									"SHIPPINGAGENTS\r",
+									"BILLTYPE\r",
+									"PORTS\r",
+									"CARGOTYPES\r",
+									"IMPORTERS\r",
+									"CURRENCIES\r",
+									"ALLAGENTS\r",
+									"UOM\r",
+									"CITIES\r",
+									"EXEMPTIONS\r",
+									"EMARA\r",
+									"FUEL\r",
+									"VEHICLESPECIFICATION\r",
+									"BODYMAIN\r",
+									"GCCCOUNTRIES\r",
+									"VEHICLECOLOR\r",
+									"POLICE_COLOR\r",
+									"INTENDED_OF_USE\r",
+									"BODY_SUBTYPE\r",
+									"BR_MATERIAL\r",
+									"TRUCK_PLATE_COLOR\r",
+									"TRUCK_COUNTRIES\r",
+									"TRUCK_PLATE_CATEGORY\r",
+									"TRUCK_TYPE\r",
+									"TRUCK_SUBTYPE\r",
+									"TRUCK_CATEGORY_TYPE\r",
+									"TRUCK_POLICE_COLOR\r",
+									"DOCUMENTTYPE\r",
+									"EXITCENTER\r",
+									"COUNTRYCODES\r",
+									"ORIGINDESTINATINOCOUNTRIES\r",
+									"UNITOFMEASURES\r",
+									"DEPOSITS\r",
+									"CASHDECLARATIONTYPE\r",
+									"PASENGERCODE\r",
+									"JOBS\r",
+									"CASHDECLARATIONFLAG\r",
+									"TRANSPORTERTYPE\r",
+									"PURPOSETYPE\r",
+									"JOBNUMBER\r",
+									"HSCODES\r",
+									"ORIGINVALUATIONREQUESTTYPES\r",
+									"PASSENGERTYPE\r",
+									"REMARKS\r",
+									"DUTIESREFUNDTYPES\r",
+									"VEHICLECOUNTRIES\r",
+									"FCAPORTSMFP_PORT_REF_CODE\r",
+									"FCAPORTMFP_PORT_ID\r",
+									"BANKS\r",
+									"BANKSBRANCHES\r",
+									"VEHTYPES\r",
+									"VEHSUBTYPES\r",
+									"FCAPORTSUAE\r",
+									"DECLARATIONREMARKS\r",
+									"DCMSHIPPER\r",
+									"*/\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response must be having at least one lookup value\", function () {\r",
+									"    pm.expect(pm.response.json().Data[0].Code);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"value": "2.0",
+								"type": "text"
+							},
+							{
+								"key": "PCode",
+								"value": "C031",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Customs/Lookup/GenericLookup?lookupType={{lookupType}}&searchString=&skip=0&parentId=2220&take=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Customs",
+								"Lookup",
+								"GenericLookup"
+							],
+							"query": [
+								{
+									"key": "lookupType",
+									"value": "COLOR",
+									"description": "BODY_SUBTYPE, TRUCK_SUBTYPE,BODYMAIN",
+									"disabled": true
+								},
+								{
+									"key": "lookupType",
+									"value": "{{lookupType}}"
+								},
+								{
+									"key": "searchString",
+									"value": ""
+								},
+								{
+									"key": "skip",
+									"value": "0"
+								},
+								{
+									"key": "parentId",
+									"value": "2220"
+								},
+								{
+									"key": "take",
+									"value": "10"
+								}
+							]
+						},
+						"description": "This is Generic lookup to fetch the any lookup data by passing the keyword for all the lookup values which are providing by TAMM."
+					},
+					"response": []
+				},
+				{
+					"name": "GetCompanyCategories",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response must be having at least one lookup value\", function () {\r",
+									"    pm.expect(pm.response.json().Data[0].Code);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"type": "text",
+								"value": "2.0"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"getCompanyCategories\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Customs/Lookup/GetCompanyCategories",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Customs",
+								"Lookup",
+								"GetCompanyCategories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GenericLookup_Vehicle",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var lookup_array = [\"AXILS\",\"CYLINDERS\",\"DOORS\",\"STEERING\",\"ENGINE\",\"COLOR\",\"VEHICLE-SPEC\",\"REMARKS\",\"AGREEMENTTYPE\",\"TERMOFSHIPMENT\",\"TRANSMISSION\"];\r",
+									"\r",
+									"var array_length = lookup_array.length;\r",
+									"\r",
+									"pm.variables.set(\"lookupType\",lookup_array[_.random(0,array_length-1)]);\r",
+									"\r",
+									"/*\r",
+									"AXILS\r",
+									"CYLINDERS\r",
+									"DOORS\r",
+									"STEERING\r",
+									"ENGINE\r",
+									"COLOR\r",
+									"VEHICLE-SPEC\r",
+									"REMARKS\r",
+									"AGREEMENTTYPE\r",
+									"TERMOFSHIPMENT\r",
+									"TRANSMISSION\r",
+									"DOCUMENT_TYPES\r",
+									"*/\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response must be having at least one lookup value\", function () {\r",
+									"    pm.expect(pm.response.json().Data[0].Code);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"type": "text",
+								"value": "2.0"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Customs/lookup/VehicleLocalLookup?lookupName=COUNTRYCODES",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Customs",
+								"lookup",
+								"VehicleLocalLookup"
+							],
+							"query": [
+								{
+									"key": "lookupName",
+									"value": "COUNTRYCODES"
+								},
+								{
+									"key": "lookupName",
+									"value": "{{lookupType}}",
+									"disabled": true
+								},
+								{
+									"key": "lookupCode",
+									"value": "97",
+									"disabled": true
+								}
+							]
+						},
+						"description": "This is Generic lookup which is created in our local database to fetch the lookups which are not provided by TAMM."
+					},
+					"response": []
+				},
+				{
+					"name": "HarmCodeList",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response must be having at least one lookup value\", function () {\r",
+									"    pm.expect(pm.response.json().Data.GetHarmCodeListResult.HSData.HSDetails[0].HSCode);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"type": "text",
+								"value": "2.0"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Section\": \"\",\r\n    \"Chapter\": \"\",\r\n    \"HSDesc\": \"\",\r\n    \"HSCode\": \"\",\r\n    \"UoMCode\": \"\",\r\n    \"DeclarationFlag\": \"Y\",\r\n    \"Skip\": \"0\",\r\n    \"Take\": \"10\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Customs/FZLookup/HarmCodeList",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Customs",
+								"FZLookup",
+								"HarmCodeList"
+							]
+						},
+						"description": "This is lookup to get all the list of Harm Codes. This is same as \"GetHarmCodeList\" API TAMM generic APIs."
+					},
+					"response": []
+				},
+				{
+					"name": "GetMaterialList",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response must be having at least one lookup value\", function () {\r",
+									"    pm.expect(pm.response.json().Data[0].ChemicalNo);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"type": "text",
+								"value": "2.0"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Customs/Lookup/MaterialList?hsCode=31021000",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Customs",
+								"Lookup",
+								"MaterialList"
+							],
+							"query": [
+								{
+									"key": "hsCode",
+									"value": "31021000"
+								}
+							]
+						},
+						"description": "This is lookup to get all the list of materials for HarmCodes. This is same as \"GetMaterialList\" API TAMM generic APIs."
+					},
+					"response": []
+				},
+				{
+					"name": "OriginExporter",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response must be having at least one lookup value\", function () {\r",
+									"    pm.expect(pm.response.json().Data[0].HSCode);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"type": "text",
+								"value": "2.0"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "/*\r\n{\r\n    \"PageNumber\": 1,\r\n    \"PageSize\": 5,\r\n    \"GetOriginExporter\": {\r\n        \"HSCode\": \"85071000\",\r\n        \"CountryCode\": \"KOR\"\r\n    }\r\n}\r\n*/",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Customs/Lookup/OriginExpoter?hsCode=87111000&countryCode=ADD&pageNumber=1&pageSize=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Customs",
+								"Lookup",
+								"OriginExpoter"
+							],
+							"query": [
+								{
+									"key": "hsCode",
+									"value": "87111000"
+								},
+								{
+									"key": "countryCode",
+									"value": "ADD"
+								},
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "5"
+								}
+							]
+						},
+						"description": "This is lookup to get all the list of origin exporters for the HS Code types. This is same as \"GetOriginExporter\" API TAMM generic APIs."
+					},
+					"response": []
+				},
+				{
+					"name": "FTA_SubItems",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response must be having at least one lookup value\", function () {\r",
+									"    pm.expect(pm.response.json().Data[0].HSCode);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"type": "text",
+								"value": "2.0"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Customs/Lookup/FTASubItems?hsCode=24039930",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Customs",
+								"Lookup",
+								"FTASubItems"
+							],
+							"query": [
+								{
+									"key": "hsCode",
+									"value": "24039930"
+								}
+							]
+						},
+						"description": "This is lookup to get all the list of FTA Sub types. This is same as \"GetFTASubItems\" API TAMM generic APIs."
+					},
+					"response": []
+				},
+				{
+					"name": "BillTypes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response must be having at least one lookup value\", function () {\r",
+									"    pm.expect(pm.response.json().Data[0].Code);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"value": "2.0",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Customs/Lookup/BillTypes?searchString=&skip=&take=",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Customs",
+								"Lookup",
+								"BillTypes"
+							],
+							"query": [
+								{
+									"key": "searchString",
+									"value": ""
+								},
+								{
+									"key": "skip",
+									"value": ""
+								},
+								{
+									"key": "take",
+									"value": ""
+								}
+							]
+						},
+						"description": "This is lookup to get all the list of Bill types. This is same as \"GetLookupDetails\" API and lookup id is 5 from TAMM services"
+					},
+					"response": []
+				},
+				{
+					"name": "ChargesType",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response must be having at least one lookup value\", function () {\r",
+									"    pm.expect(pm.response.json().Data[0].Code);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"type": "text",
+								"value": "2.0"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Customs/lookup/ChargesType",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Customs",
+								"lookup",
+								"ChargesType"
+							]
+						},
+						"description": "This is lookup to get all the list of Charges types. This is same as \"GetAdditionalCharges\" API from TAMM services"
+					},
+					"response": []
+				},
+				{
+					"name": "CargoTypes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response must be having at least one lookup value\", function () {\r",
+									"    pm.expect(pm.response.json().Data[0].Code);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"value": "2.0",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Customs/Lookup/CargoTypes?searchString=&skip=&take=",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Customs",
+								"Lookup",
+								"CargoTypes"
+							],
+							"query": [
+								{
+									"key": "searchString",
+									"value": ""
+								},
+								{
+									"key": "skip",
+									"value": ""
+								},
+								{
+									"key": "take",
+									"value": ""
+								}
+							]
+						},
+						"description": "This is lookup to get all the list of Cargo types. This is same as \"GetLookupDetails\" API and lookup id is 7 from TAMM services"
+					},
+					"response": []
+				},
+				{
+					"name": "Currencies",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response must be having at least one lookup value\", function () {\r",
+									"    pm.expect(pm.response.json().Data[0].Code);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"value": "2.0",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Customs/Lookup/Currencies?searchString=&skip=&take=",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Customs",
+								"Lookup",
+								"Currencies"
+							],
+							"query": [
+								{
+									"key": "searchString",
+									"value": ""
+								},
+								{
+									"key": "skip",
+									"value": ""
+								},
+								{
+									"key": "take",
+									"value": ""
+								}
+							]
+						},
+						"description": "This is lookup to get all the list of Currencies. This is same as \"GetLookupDetails\" API and lookup id is 10 from TAMM services"
+					},
+					"response": []
+				},
+				{
+					"name": "ImporterExporter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response must be having at least one lookup value\", function () {\r",
+									"    pm.expect(pm.response.json().Data[0].Code);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"value": "2.0",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Customs/Lookup/ImporterExporter?searchString=1128929&skip=0&take=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Customs",
+								"Lookup",
+								"ImporterExporter"
+							],
+							"query": [
+								{
+									"key": "searchString",
+									"value": "1128929"
+								},
+								{
+									"key": "skip",
+									"value": "0"
+								},
+								{
+									"key": "take",
+									"value": "10",
+									"description": "Server side Pagination"
+								}
+							]
+						},
+						"description": "This is lookup to get all the list of Importer/Exporters. This is same as \"GetLookupDetails\" API and lookup id is 9 from TAMM services"
+					},
+					"response": []
+				},
+				{
+					"name": "Ports",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response must be having at least one lookup value\", function () {\r",
+									"    pm.expect(pm.response.json().Data[0].Code);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"value": "2.0",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Customs/Lookup/Ports?searchString=&skip=0&take=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Customs",
+								"Lookup",
+								"Ports"
+							],
+							"query": [
+								{
+									"key": "searchString",
+									"value": ""
+								},
+								{
+									"key": "skip",
+									"value": "0"
+								},
+								{
+									"key": "take",
+									"value": "10",
+									"description": "Serverside pagination"
+								}
+							]
+						},
+						"description": "This is lookup to get all the list of all Ports. This is same as \"GetLookupDetails\" API and lookup id is 6 from TAMM services"
+					},
+					"response": []
+				},
+				{
+					"name": "Units",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response must be having at least one lookup value\", function () {\r",
+									"    pm.expect(pm.response.json().Data[0].Code);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"value": "2.0",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Customs/Lookup/Units?searchString=&skip=&take=",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Customs",
+								"Lookup",
+								"Units"
+							],
+							"query": [
+								{
+									"key": "searchString",
+									"value": ""
+								},
+								{
+									"key": "skip",
+									"value": ""
+								},
+								{
+									"key": "take",
+									"value": ""
+								}
+							]
+						},
+						"description": "This is lookup to get all the list of all Units of measures. This is same as \"GetLookupDetails\" API and lookup id is 24 from TAMM services"
+					},
+					"response": []
+				},
+				{
+					"name": "GCCCountires",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response must be having at least one lookup value\", function () {\r",
+									"    pm.expect(pm.response.json().Data[0].Code);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"value": "2.0",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Customs/Lookup/GCCCountries?searchString=&skip=&take=",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Customs",
+								"Lookup",
+								"GCCCountries"
+							],
+							"query": [
+								{
+									"key": "searchString",
+									"value": ""
+								},
+								{
+									"key": "skip",
+									"value": ""
+								},
+								{
+									"key": "take",
+									"value": ""
+								}
+							]
+						},
+						"description": "This is lookup to get all the list of GCC Countries. This is same as \"GetLookupDetails\" API and lookup id is 33 from TAMM services"
+					},
+					"response": []
+				},
+				{
+					"name": "PlateColors",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response must be having at least one lookup value\", function () {\r",
+									"    pm.expect(pm.response.json().Data[0].Code);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"value": "2.0",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Customs/Lookup/PlateColors?searchString=&skip=&take=",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Customs",
+								"Lookup",
+								"PlateColors"
+							],
+							"query": [
+								{
+									"key": "searchString",
+									"value": ""
+								},
+								{
+									"key": "skip",
+									"value": ""
+								},
+								{
+									"key": "take",
+									"value": ""
+								}
+							]
+						},
+						"description": "This is lookup to get all the list of Truck Plate Colors. This is same as \"GetLookupDetails\" API and lookup id is 44 from TAMM services"
+					},
+					"response": []
+				},
+				{
+					"name": "CargoAgents",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response must be having at least one lookup value\", function () {\r",
+									"    pm.expect(pm.response.json().Data[0].Code);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"value": "2.0",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Customs/Lookup/CargoAgents?searchString=A91&skip=&take=",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Customs",
+								"Lookup",
+								"CargoAgents"
+							],
+							"query": [
+								{
+									"key": "searchString",
+									"value": "A91"
+								},
+								{
+									"key": "skip",
+									"value": ""
+								},
+								{
+									"key": "take",
+									"value": ""
+								}
+							]
+						},
+						"description": "This is lookup to get all the list of Cargo Agents/Shipping Agents. This is same as \"GetLookupDetails\" API and lookup id is 4 from TAMM services"
+					},
+					"response": []
+				},
+				{
+					"name": "CarAgents",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response must be having at least one lookup value\", function () {\r",
+									"    pm.expect(pm.response.json().Data[0].Code);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"value": "2.0",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Customs/Lookup/CarAgents?searchString=&skip=&take=",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Customs",
+								"Lookup",
+								"CarAgents"
+							],
+							"query": [
+								{
+									"key": "searchString",
+									"value": ""
+								},
+								{
+									"key": "skip",
+									"value": ""
+								},
+								{
+									"key": "take",
+									"value": ""
+								}
+							]
+						},
+						"description": "This is lookup to get all the list of Car Agents (the code which strats wit 'V'). This is same as \"GetLookupDetails\" API and lookup id is 11 from TAMM services"
+					},
+					"response": []
+				},
+				{
+					"name": "ClearingAgents",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response must be having at least one lookup value\", function () {\r",
+									"    pm.expect(pm.response.json().Data[0].Code);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"value": "2.0",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Customs/Lookup/ClearingAgents?searchString=&skip=&take=",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Customs",
+								"Lookup",
+								"ClearingAgents"
+							],
+							"query": [
+								{
+									"key": "searchString",
+									"value": ""
+								},
+								{
+									"key": "skip",
+									"value": ""
+								},
+								{
+									"key": "take",
+									"value": ""
+								}
+							]
+						},
+						"description": "This is lookup to get all the list of Clearing Agents (the code which strats wit 'C'). This is same as \"GetLookupDetails\" API and lookup id is 11 from TAMM services"
+					},
+					"response": []
+				},
+				{
+					"name": "CenterCodes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response must be having at least one lookup value\", function () {\r",
+									"    pm.expect(pm.response.json().Data[0].Code);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"value": "2.0",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Customs/Lookup/CenterCodes?searchString=&skip=&take=",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Customs",
+								"Lookup",
+								"CenterCodes"
+							],
+							"query": [
+								{
+									"key": "searchString",
+									"value": ""
+								},
+								{
+									"key": "skip",
+									"value": ""
+								},
+								{
+									"key": "take",
+									"value": ""
+								}
+							]
+						},
+						"description": "This is lookup to get all the list of Center Codes. This is same as \"GetLookupDetails\" API and lookup id is 1 from TAMM services"
+					},
+					"response": []
+				},
+				{
+					"name": "PlateCategories",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response must be having at least one lookup value\", function () {\r",
+									"    pm.expect(pm.response.json().Data[0].Code);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"value": "2.0",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Customs/Lookup/PlateCategories?searchString=&skip=&take=",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Customs",
+								"Lookup",
+								"PlateCategories"
+							],
+							"query": [
+								{
+									"key": "searchString",
+									"value": ""
+								},
+								{
+									"key": "skip",
+									"value": ""
+								},
+								{
+									"key": "take",
+									"value": ""
+								}
+							]
+						},
+						"description": "This is lookup to get all the list of Truck Plate categories. This is same as \"GetLookupDetails\" API and lookup id is 46 from TAMM services"
+					},
+					"response": []
+				},
+				{
+					"name": "Vessel",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response must be having at least one lookup value\", function () {\r",
+									"    pm.expect(pm.response.json().Data[0].Code);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"value": "2.0",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Customs/Lookup/Vessel?searchString=&skip=0&take=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Customs",
+								"Lookup",
+								"Vessel"
+							],
+							"query": [
+								{
+									"key": "searchString",
+									"value": ""
+								},
+								{
+									"key": "skip",
+									"value": "0"
+								},
+								{
+									"key": "take",
+									"value": "5",
+									"description": "Server side pagination"
+								}
+							]
+						},
+						"description": "This is lookup to get all the list of Vessels. This is same as \"GetLookupDetails\" API and lookup id is 2 from TAMM services"
+					},
+					"response": []
+				},
+				{
+					"name": "BodyType",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response must be having at least one lookup value\", function () {\r",
+									"    pm.expect(pm.response.json().Data[0].Code);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"value": "2.0",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Customs/Lookup/BodyType?searchString=&skip=0&take=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Customs",
+								"Lookup",
+								"BodyType"
+							],
+							"query": [
+								{
+									"key": "searchString",
+									"value": ""
+								},
+								{
+									"key": "skip",
+									"value": "0"
+								},
+								{
+									"key": "take",
+									"value": "5",
+									"description": "Server side pagination"
+								}
+							]
+						},
+						"description": "This is lookup to get all the list of Body types. This is same as \"GetLookupDetails\" API and lookup id is 32 from TAMM services"
+					},
+					"response": []
+				},
+				{
+					"name": "StorageType",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response must be having at least one lookup value\", function () {\r",
+									"    pm.expect(pm.response.json().Data[0].Code);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"type": "text",
+								"value": "2.0"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Customs/Lookup/StorageType",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Customs",
+								"Lookup",
+								"StorageType"
+							]
+						},
+						"description": "This is lookup to get all the list of Storage Types. In-house service and made static values."
+					},
+					"response": []
+				},
+				{
+					"name": "CurrencyRates",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response must be having at least one lookup value\", function () {\r",
+									"    pm.expect(pm.response.json().Data[0].Code);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"value": "2.0",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://10.0.131.21/ATLP/IC/API/api/Customs/lookup/CurrencyRates?getCurrencyRates=",
+							"protocol": "http",
+							"host": [
+								"10",
+								"0",
+								"131",
+								"21"
+							],
+							"path": [
+								"ATLP",
+								"IC",
+								"API",
+								"api",
+								"Customs",
+								"lookup",
+								"CurrencyRates"
+							],
+							"query": [
+								{
+									"key": "getCurrencyRates",
+									"value": ""
+								}
+							]
+						},
+						"description": "This is lookup to get all the currency exchange rates. This is same as \"GetCurrencyRates\" API from TAMM services"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Drafts",
+			"item": [
+				{
+					"name": "CreateDraftFromSea",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Collecting draftID for Sea Transport Mode\", function () {\r",
+									"    pm.collectionVariables.set(\"draftID\",pm.response.json().Data.DraftId);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the success message\", function () {\r",
+									"    pm.expect(pm.response.json().Msg).to.eql(\"Draft Created Successfully\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"value": "2.0",
+								"type": "text"
+							},
+							{
+								"key": "CCode",
+								"value": "{{companyCode}}",
+								"description": "Profile code/Maqta Compnay Code",
+								"type": "text"
+							},
+							{
+								"key": "UCode",
+								"value": "{{username}}",
+								"description": "Logged in user code",
+								"type": "text"
+							},
+							{
+								"key": "UPass",
+								"value": "{{UAEID}}",
+								"type": "text"
+							},
+							{
+								"key": "PCode",
+								"value": "C031",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"CustomsCenterCode\": \"V\",\r\n    \"ShippingAgentCode\": \"A3\",//\"{{agentCode}}\",\r\n    \"DONumber\": \"336387\",//\"{{doNumber}}\",\r\n    \"HouseBLNumber\": \"1\",//\"{{houseBLNumber}}\",\r\n    \"MasterBLNumber\": \"1\",//\"{{masterBLNumber}}\",\r\n    \"UAEId\": \"\",\r\n    \"ServiceCode\": \"17\",\r\n    \"ImporterCode\": \"\",\r\n    \"ProfileCode\": \"C031\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Customs/Job/CreateDraftFromSea",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Customs",
+								"Job",
+								"CreateDraftFromSea"
+							]
+						},
+						"description": "This is to create the Draft for Sea Transport mode by providing the Agent Code, DO Number, House BL Number, Master BL Number. This is same as \"CreateDraft\" API from TAMM services."
+					},
+					"response": []
+				},
+				{
+					"name": "GetJobList_Revised2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var schema = {\r",
+									"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"  \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"Data\": {\r",
+									"      \"type\": \"object\",\r",
+									"      \"properties\": {\r",
+									"        \"data\": {\r",
+									"          \"type\": \"array\",\r",
+									"          \"items\": [\r",
+									"            {\r",
+									"              \"type\": \"object\",\r",
+									"              \"properties\": {\r",
+									"                \"DraftId\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"JobNumber\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"JobCreatedDate\": {\r",
+									"                  \"type\": \"string\"\r",
+									"                },\r",
+									"                \"JobCreatedBy\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"DONumber\": {\r",
+									"                  \"type\": \"string\"\r",
+									"                },\r",
+									"                \"CustomerBillNumber\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"CustomerBillDate\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"PortName\": {\r",
+									"                  \"type\": \"string\"\r",
+									"                },\r",
+									"                \"MasterBLNumber\": {\r",
+									"                  \"type\": \"string\"\r",
+									"                },\r",
+									"                \"AgentCode\": {\r",
+									"                  \"type\": \"string\"\r",
+									"                },\r",
+									"                \"AgentName\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"CargoAgentCode\": {\r",
+									"                  \"type\": \"string\"\r",
+									"                },\r",
+									"                \"HouseBLNumber\": {\r",
+									"                  \"type\": \"string\"\r",
+									"                },\r",
+									"                \"Shipper\": {\r",
+									"                  \"type\": \"string\"\r",
+									"                },\r",
+									"                \"ShipperCode\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"GoodDesc\": {\r",
+									"                  \"type\": \"string\"\r",
+									"                },\r",
+									"                \"Marks\": {\r",
+									"                  \"type\": \"string\"\r",
+									"                },\r",
+									"                \"VesselCode\": {\r",
+									"                  \"type\": \"string\"\r",
+									"                },\r",
+									"                \"VoyageNumber\": {\r",
+									"                  \"type\": \"string\"\r",
+									"                },\r",
+									"                \"ArrivalDate\": {\r",
+									"                  \"type\": \"string\"\r",
+									"                },\r",
+									"                \"MAQASA\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"ADFCA\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"PreClear\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"ConsgineeCode\": {\r",
+									"                  \"type\": \"string\"\r",
+									"                },\r",
+									"                \"ConsgineeEngName\": {\r",
+									"                  \"type\": \"string\"\r",
+									"                },\r",
+									"                \"ConsgineeArbName\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"BillType\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"IsBil\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"JobAccepted\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"Cashier\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"Voucher\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"CustBillType\": {\r",
+									"                  \"type\": \"string\"\r",
+									"                },\r",
+									"                \"CustBillCenter\": {\r",
+									"                  \"type\": \"string\"\r",
+									"                },\r",
+									"                \"CustBillYear\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"CustBillTypeEng\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"CustBillTypeArb\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"GRRNumber\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"Channel\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"OGAPresent\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"TotalCount\": {\r",
+									"                  \"type\": \"integer\"\r",
+									"                },\r",
+									"                \"ShowPayBtn\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"ISPaid\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"RowNumber\": {\r",
+									"                  \"type\": \"integer\"\r",
+									"                },\r",
+									"                \"Status\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"MODIFICATION_STATUS\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"CANCEL_STATUS\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"CANCEL_REQUEST_NUMBER\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"MODIFICATION_REQUEST_NUMBER\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"REQUEST_NUMBER\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"JOB_DATE\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"IDBPaymentRequired\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"HasInspection\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"CargoType\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"Center\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                },\r",
+									"                \"ImporterExporter\": {\r",
+									"                  \"type\": \"null\"\r",
+									"                }\r",
+									"              },\r",
+									"              \"required\": [\r",
+									"                \"DraftId\",\r",
+									"                \"JobNumber\",\r",
+									"                \"JobCreatedDate\",\r",
+									"                \"JobCreatedBy\",\r",
+									"                \"DONumber\",\r",
+									"                \"CustomerBillNumber\",\r",
+									"                \"CustomerBillDate\",\r",
+									"                \"PortName\",\r",
+									"                \"MasterBLNumber\",\r",
+									"                \"AgentCode\",\r",
+									"                \"AgentName\",\r",
+									"                \"CargoAgentCode\",\r",
+									"                \"HouseBLNumber\",\r",
+									"                \"Shipper\",\r",
+									"                \"ShipperCode\",\r",
+									"                \"GoodDesc\",\r",
+									"                \"Marks\",\r",
+									"                \"VesselCode\",\r",
+									"                \"VoyageNumber\",\r",
+									"                \"ArrivalDate\",\r",
+									"                \"MAQASA\",\r",
+									"                \"ADFCA\",\r",
+									"                \"PreClear\",\r",
+									"                \"ConsgineeCode\",\r",
+									"                \"ConsgineeEngName\",\r",
+									"                \"ConsgineeArbName\",\r",
+									"                \"BillType\",\r",
+									"                \"IsBil\",\r",
+									"                \"JobAccepted\",\r",
+									"                \"Cashier\",\r",
+									"                \"Voucher\",\r",
+									"                \"CustBillType\",\r",
+									"                \"CustBillCenter\",\r",
+									"                \"CustBillYear\",\r",
+									"                \"CustBillTypeEng\",\r",
+									"                \"CustBillTypeArb\",\r",
+									"                \"GRRNumber\",\r",
+									"                \"Channel\",\r",
+									"                \"OGAPresent\",\r",
+									"                \"TotalCount\",\r",
+									"                \"ShowPayBtn\",\r",
+									"                \"ISPaid\",\r",
+									"                \"RowNumber\",\r",
+									"                \"Status\",\r",
+									"                \"MODIFICATION_STATUS\",\r",
+									"                \"CANCEL_STATUS\",\r",
+									"                \"CANCEL_REQUEST_NUMBER\",\r",
+									"                \"MODIFICATION_REQUEST_NUMBER\",\r",
+									"                \"REQUEST_NUMBER\",\r",
+									"                \"JOB_DATE\",\r",
+									"                \"IDBPaymentRequired\",\r",
+									"                \"HasInspection\",\r",
+									"                \"CargoType\",\r",
+									"                \"Center\",\r",
+									"                \"ImporterExporter\"\r",
+									"              ]\r",
+									"            }\r",
+									"          ]\r",
+									"        },\r",
+									"        \"pageCount\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"totalItemCount\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"pageIndex\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"pageNumber\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"pageSize\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"hasPreviousPage\": {\r",
+									"          \"type\": \"boolean\"\r",
+									"        },\r",
+									"        \"hasNextPage\": {\r",
+									"          \"type\": \"boolean\"\r",
+									"        },\r",
+									"        \"isFirstPage\": {\r",
+									"          \"type\": \"boolean\"\r",
+									"        },\r",
+									"        \"isLastPage\": {\r",
+									"          \"type\": \"boolean\"\r",
+									"        },\r",
+									"        \"itemStart\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"itemEnd\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        }\r",
+									"      },\r",
+									"      \"required\": [\r",
+									"        \"data\",\r",
+									"        \"pageCount\",\r",
+									"        \"totalItemCount\",\r",
+									"        \"pageIndex\",\r",
+									"        \"pageNumber\",\r",
+									"        \"pageSize\",\r",
+									"        \"hasPreviousPage\",\r",
+									"        \"hasNextPage\",\r",
+									"        \"isFirstPage\",\r",
+									"        \"isLastPage\",\r",
+									"        \"itemStart\",\r",
+									"        \"itemEnd\"\r",
+									"      ]\r",
+									"    },\r",
+									"    \"Msg\": {\r",
+									"      \"type\": \"null\"\r",
+									"    },\r",
+									"    \"Success\": {\r",
+									"      \"type\": \"boolean\"\r",
+									"    },\r",
+									"    \"Errorlst\": {\r",
+									"      \"type\": \"null\"\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"Data\",\r",
+									"    \"Msg\",\r",
+									"    \"Success\",\r",
+									"    \"Errorlst\"\r",
+									"  ]\r",
+									"}\r",
+									"\r",
+									"var json = pm.response.json()\r",
+									"pm.test('schema is valid', function(){\r",
+									"    pm.expect(tv4.validate(json, schema)).to.be.true;\r",
+									"\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(30000);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"var size=0;\r",
+									"for (var count in responseBody) {\r",
+									"    if(responseBody.hasOwnProperty(count))\r",
+									"        size += 1;\r",
+									"}\r",
+									"console.log(\"BODY SIZE = \" + size); \r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJTSEFNRUVNLlBJTEFUSE9EQU4iLCJqdGkiOiJlMjkxMDRjMy0xY2M3LTQ5YWQtYWYzNC0xNjE0N2M0MDg5YzciLCJwY3NUa24iOiJXdnZFV09TYkQwRFFORk1xR0lnTWlob1ppRVBiZEE0d0JjckNNRFJYZ1VtMW1MTXJHbWExZ1N0VlZSRkZEQmp2djNzVG5zOVk2Q3dfcUViZjRVdGpKQV9uczlBYjJsNnBSMWVpbTU1X3RiNFBGdjlaSUc0bFFEWHAtYUxIeDhTcHRRZUtVV1ZGSHhjb1Z4RWtrNnRJNzdfQnFwdGRkOUVKZzdPSkdST0t6SE5xekwxNHdrQlVBbDRGT01PSnBOSnpNdHdMVEFqMjJlb3F0bEw0a3hJVzF2bTRIX0ZhczFXR1pnNTUwWGhTZnp5ZTAwY3pVMHNMd1p3eTAwOC1ORVQ5T0Y3cjFickRuRmhBWWlVNy1LQWc3ZE1XYmJSX3ZvLV9ZZnlZUm9uQ1AwV1JIT3M4MGItaTJGZzlMOHNocjNlamNZdnpkNm9hdzUyckJCbDFOaDNDYnpkT1N6TWZIdHNYTmJIZG1VZE44WGIybUNPRzB1aG03eUhsVkRVZkZicUNIbkd0ajFPN2ZwUXI2dTB0TThyems3N3M1LWtIY1hpNUFlU3Z0V0M0U0ZOMDhJVkhQSFBKZUYzSVA0ZkVEeF9kNTVndW0yemhUZnZHc1VKc0dvMzA5cjBFVGFXQmN4UXo0Vmx2ZmdYWG5GN3ItTmx2OWtXZXhLOVNKdkFjMHJLSDBhdmlHVmV0ZlQzamp0bmlPN3NzRGRSb09ETHAwU3pSWDlvS2VGSm1tcnFRb3VMNmdjWS1MMnNYa3V1RGFtS3FkVkVqRzhudEMtOXNMZnN4OENUWmxEVy1wR1FQelRtUmtGTlJoUmk3elBGREItY2h6eUhpVEZZcThQQU9QSWF6S1ppMEM4by1qODk3dmRCZGhPc1ZnY3JZUGhLYmJOWGRONnVPcmhXTEFQSjdOSkNCNDZ4dGFwcld2Q3BsUmRnTXlWc1NHOVp6VlIxUmI5LWVZV0hoVEZqU3FnQkxJMW5sa093U2s5Wnh3cEZwYjBHclBIQ1FaWTA5QXIwWEE5eWFKNGNPbHpzdXh1UzJ0Ylp3bk9pY3l6YUoxdlBHaXFuMGlZZk5GX1FFSlFSZzBfd1lOUDFWYkNvVmMyQ2NfTmE2YWdrQzh0ZlBDOGZiZ08zLWJWOGNjZUF3dE1abWhJX0ZhRUY4RWVocTdIcmF4WFNxajB0M21FU3ZlM0tNVThqWCIsInBjc1J0a24iOiI5WkZYVEtCWjBHSGpBQmdJakJLUlBiZ0dvUlFGUUpvNzFSckdRTWVhWmN3M1p5Nld4bFJBYzNoV0FjUDN3UktyTnBreUd0YUlyMEtXV0dGdFZiMGtkV1pZM1JzN05sLVhwOFpNakppdUJyYVhNTXJXaHdMTmN5azQweVFMeG44aG5NWjhob0RYbno1akVtdHRxVGwyaTZWVkNtZ3RDYTR3MkFLSDdvcDVTbExLdjYzenpkel8taVAwZ1gySHM1dDc0NXVZaGI1SncyRnYtQmZFSFZZZkVoYTNHY0FaR0VXX1Fhdm1SMkUydjlUeGoxS2tNdEx0Q2pEWlhkbXdBVm9tMTVqYk5xS2tUTWRKQlA0c2k4bmxQVkFBSlZpUjQwVVZoQ29QUVdCeFpjb1VRTFdRZXZUYkFZMXR4Tm52SzdfWk1lUjZnSGpxVXhxMDlvTXAzN3pDdF9jakpZY1pTdXFuaGtnM3lBenFvbHIzWmxZb1ZZQ1ZaVDdmR0syV3dGUHBoVzRxWDkxdF8xVFQwMlJfSkhOY05GMXJ6OEpEMHVpM1pTTkhMWmJrTm83aThnV3VEaDNwX1ZZWnJHZUFnaGRPWEFlUEVFN0JMMjVlUnc5eXlqcTc5VVh4Nng2ZjV2MWtuZXlsZGpma0d4SmpXRXhVWVhROU5rRHFja0RfUE5lMUJHY085Z0xPeFFHbTh3amxiWnR3Y0d4V3hpSFdEdko2Q2JhOVNDN3RENHhka1hHRVNJbkNkVVF3blVrN2l2T0hCY0JmNXJoUGVUNkRDeVRvLWh6VXBZWDJMbG45S3EwR2QxNU5fdkZmSWp2VFZlenRoSHBiZGlKQVB2bFFyeDVMOFBfSjFfdFp6OHhUbThlcV9ieEhFZVJYcDRHaUN4emdiVHpxTldQNHg3SkdqaEY3SUZVVVptNVA5Wk1hOVBmbXhpYl83d3JKbW9hcEY1SmZQdzhWR0phOWloMHBQd1c1MU5Kc29OQW1GUGl3MkkxNmdJa2tBdnFrdkg2MEt4U0taaFJ2dm1jY1p1NlNoUWlaMFFoTTRFckxPZXNIZ29PbDctazJqM2U5SnZoS0hxTUpJQUxSa0RMallpTVZPZmlldWxPanNzeDlsa2RCb3g1QUlrMEUyUEpCT1JtNnNzQlZnVThyNFdOUmxLUi03RjV2SW5sWVNBeUFwVHZwcjN5bSIsInBjc0V4cCI6IjcvMjUvMjAyMSAxMDo1OTo0MiBBTSIsImNvbXBhbnlJRCI6IjI0MzI5IiwiY29tcGFueUNvZGUiOiJQQ1NFWFA1NDY3IiwiY29tcGFueVByb2ZpbGVOYW1lRW5nIjoiU2hpcHBpbmcgQWdlbnQiLCJjb21wYW55UHJvZmlsZUNvZGUiOiJTQUciLCJPdGhlclByb2ZpbGVzIjoiRkZXLFRDUFIsU0hQUixDQSIsIklzUENTU3VwZXJVc2VyIjoiRmFsc2UiLCJJc0F1dGhvcml6ZWRVc2VyIjoiRmFsc2UiLCJFbWFpbCI6Imthdml0YS5tZW5vbkBtYXF0YS5hZSIsIlVzZXJOYW1lIjoiU2hhbWVlbSBQaWxhdGhvZGFuIiwiVXNlcklkIjoiMTE3MzAiLCJVc2VyQ29kZSI6InNoYW1lZW0ucGlsYXRob2RhbiIsIkNvbXBhbnlOYW1lIjoiTUlDQ08gTE9HSVNUSUNTIiwiVHJhZGVMaWNlbnNlTnVtYmVyIjoiIiwiVGVybWluYWxDb2RlIjoiIiwiVGVybWluYWxJRCI6IjAiLCJJc0Jvcm91Z2VEb2NDZW50ZXJVc2VyIjoiZmFsc2UiLCJJZCI6ImYxNWRhZjQyLTBlZTMtNDY5Ni05NWY0LTM3MTIzYTAxNTVhNiIsIlNlY3VyaXR5U3RhbXAiOiJjMDgxNmZkOC1hYjE3LTQ0OWMtODU0OS1jMmIyNTBlMGQ0YjQiLCJaQ0NvbnRhY3RJZCI6IiIsInVjSUQiOiIwMDIyNDIiLCJpc1N1cGVyVXNlciI6ImZhbHNlIiwiY29tcGFueVR5cGUiOiIiLCJpc0NGUyI6ImZhbHNlIiwiZXhwIjoxNjI3MjEwODEzLCJpc3MiOiJNRy5BcHAuU2VjdXJpdHkiLCJhdWQiOiJNRy5BcHAuQXBwcGludG1lbnQuQXBpIn0.9nIJaNj6zSaUq6_lj6iuLodaqRwDfYJZ82gtskwVRHk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"value": "2.0",
+								"type": "text"
+							},
+							{
+								"key": "PCode",
+								"value": "C031",
+								"type": "text"
+							},
+							{
+								"key": "UCode",
+								"value": "shameem.pilathodan ",
+								"type": "text"
+							},
+							{
+								"key": "UPass",
+								"value": "784197735942753 ",
+								"type": "text"
+							},
+							{
+								"key": "x-descriptor",
+								"value": "{\"filter\":[],\"Order\":{\"OrderBy\":\"JobCreatedDate\",\"OrderType\":\"desc\"},\"pagination\":{\"pageSize\":10,\"pageIndex\":1}}",
+								"type": "text"
+							},
+							{
+								"key": "CCode",
+								"value": "PCSEXP5467",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"profile\": \"CLEARING\",//IMPORTER, CLEARING\r\n\"profileCode\": \"\",\r\n\"draftId\": \"\",\r\n\"centerCode\": \"V\",\r\n\"agentCode\": \"A3\",\r\n\"doNumber\": \"336387\",\r\n\"jobNumber\": \"\",\r\n\"custBillNumber\": \"\",\r\n\"billType\": \"\",\r\n\"houseBLNumber\": \"KAVHBL2\",\r\n\"importerExporter\": \"\",\r\n\"cargoType\": \"\",\r\n\"masterBLNumber\": \"KAVMBL1\",\r\n\"voucherNo\": \"\",\r\n\"containerNumber\": \"\",\r\n\"chassisNumber\": \"\",\r\n\"searchForDO\": \"true\",\r\n\"WildCardSearch\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Customs/Job/GetJobList_Revised2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Customs",
+								"Job",
+								"GetJobList_Revised2"
+							]
+						},
+						"description": "This request will fetch the all the list of DOs (SEA Transport Mode) available for the clearing agent by providing the agent code, HBL, MBL. This is same as \"GetShipmentList\" API from TAMM services."
+					},
+					"response": []
+				},
+				{
+					"name": "SubmitAllDeclarationData",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var schema = {\r",
+									"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"  \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"Data\": {\r",
+									"      \"type\": \"object\",\r",
+									"      \"properties\": {\r",
+									"        \"DraftId\": {\r",
+									"          \"type\": \"string\"\r",
+									"        }\r",
+									"      },\r",
+									"      \"required\": [\r",
+									"        \"DraftId\"\r",
+									"      ]\r",
+									"    },\r",
+									"    \"Msg\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"Success\": {\r",
+									"      \"type\": \"boolean\"\r",
+									"    },\r",
+									"    \"Errorlst\": {\r",
+									"      \"type\": \"null\"\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"Data\",\r",
+									"    \"Msg\",\r",
+									"    \"Success\",\r",
+									"    \"Errorlst\"\r",
+									"  ]\r",
+									"}\r",
+									"\r",
+									"var json = pm.response.json()\r",
+									"pm.test('schema is valid', function(){\r",
+									"    pm.expect(tv4.validate(json, schema)).to.be.true;\r",
+									"\r",
+									"})\r",
+									"\r",
+									"var size=0;\r",
+									"for (var count in responseBody) {\r",
+									"    if(responseBody.hasOwnProperty(count))\r",
+									"        size += 1;\r",
+									"}\r",
+									"console.log(\"BODY SIZE = \" + size); \r",
+									"\r",
+									"pm.test(\"Verify status code should be 200\", function () {\r",
+									"    pm.response.to.be.not.eql(null);\r",
+									"    pm.response.to.have.status(200);\r",
+									"\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);   \r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJTSEFNRUVNLlBJTEFUSE9EQU4iLCJqdGkiOiI0YTg1N2JjNy0wZDE2LTQ5ZWUtODVmYy00NTA5ZTYyNDUzMmUiLCJwY3NUa24iOiJ4OEJGbk51SzgyME1pV3NQc1hRTEpZNmxzci12RXByU1dSV2xvdzI4bnBfcWEwb3FHTl9TbmJUeWRNbTU4WHMwYUNicEZWNzg3TDhUbURnd1FpcDNBNGRvMmdERFdIUThCWGsxMXF5OVRZR2Nac0xRbkZYaHEtUFNHMi1lYlFQeGVvaTZSV25ORTJrMXk5aEQ3NmVRTnpoTFNHSzlXdk5NMlY2QU9pRFBDVTdNTmVvU0lEYVRKYzJDR01EN0FZall6cjM3T2F3VXU1Rkk2LXdTNnlEU3JuN3dsaHNCMFlpUnBvUUdnMUJHWW5CcGVwU0xsNnlCMlUxeHpBQVBvNmV1QnAxMy12eHFoZUN5Q2JocDdiUmk0NVcxWnJoUHZQOFIwMjY0Mm52WEFhcmdjWkM1U0s5R2xyV2pfSHFvTTRuajN0eUdmQmtWeFpndkpna1hZNXRlRGhnY1RudDgzWUxUdUZJOFJNMzQ3WlplTllTTWNuYUhsckJHYzBrSGk5TkswdGNZSmctMm9LVkFoVlNpRHhodldfUE1hQVcxUHZpQjdDUFdIc3Z5SDRkUlpEa1BrNkZlLTFvbkJqT1dwSjBJZGU3d1V2SGJBeWVWSXZYWnF4VV9TeHB2bUlPdG5Rdk5ocG1OT21UYjR6MjZOSGtlWmRMcTQ4N1RZbFc2SnFKdGlWemV5S0dJMlVnakJzcXdHMlgxZW1vaDhlQWUwOXA1QW9KSjFWUWRnc09saFhOcFdMVFNMVHdjWTFOcXA2dmh0QUFwQUlwZVFlNXJlbk8ydFNseW03OE96ODhiYmdJX1c5UjZ5MFRWSTB4S0N5eThZdWlsYkx1cGtIa1lmckZueWVCV2IxRTM3Ymc0d21fUlN2VDdYbG00YnF1aE85bmJqYVMzMVVmcFdDMVgtNlQ3UUZzUmxaUk05WDVRT29MSUIzMjF6cEh1eURlMWh2ejIwOEx0aTdsLU1XZzFpZjBqR2lib04yS2p3Y3l5azZpY2N3R3NBdHdPV0VjWFZLMHBieXdlQzJBV3VNdGgtbFNEYngxSkE4bUxmQm83b19Ob3MzSlVIcU1FOU9aLXVMUDdRUk5HaHNYZzI1eTYxSndyUkwwX2NBdDdKemNBVTZaVEZiclc5Z3VRVXVqeDVodEE5Y2g4UzZ1Qllsa1hGeGJKenAtUUhhaHg2T3VZZzEyaiIsInBjc1J0a24iOiJROHMtM291QnFlUzBBQ2liMUh2eGozTXRQS0E4cWk0UHVxdVpxX0pzM3JiNTBRQTFDYW1VeHM0T2FrejFCZGs5dlUxdzZjeHg5SnFrMUduRXZqOXhSbVlHbHpkcDc0S3E1Wl85d2tHdmdVcUdMcFZFUXVrbWtrT0xVWDhfdzk5X2lBOEV6X2VxMFBRYjhSWW1iTE5kSzVMaXdpQ1NCT25DREdFRElvXzZNR1h1UUU2RnFtTktQWFJ1b0R2MWNJb0xIOGt3SzFWMm5ER1paWVZDRUxaS21vcEdDSGJPOHY4TzRVMmdfQjhrbWNPbUxxZnVOQ0NhcUtoeDRFV05pM0ROUzZ0T1VnLVlGSlh0ODBIRnE1R0JtNW5JWXRQaGtmUW94UWN1UG9LV05DVmxTN00xSjVqLUxUUVdkZkkyZlpjVWQxeXkxdnFFOTdmTVh5cGdtZVplSERJN2QxZDB5R2VRdFR1U2IydXlHT1MtVU5keTEyeUFfWC1WaVpnZ0hGUGRmTjhMS1ozbEVDSWVHSzNKdkhCSEo2ckZnNUkyZkpza3JlNWFPM2VSSVNuR0F0TXBwRHZxMEYybkZ0dFhVaU1iUFRSdlEwYk50M3NmZFRFOFZ1WmpJc0x1eW9QbFczNkhiUjRCdjI0N1M3Y0hhNTkyNktpTnRRMVZMcEptWXR0bnRXZ2dWT0d1amE2ckl3SFBRMU44SnJZMFRveG9WMU9wVnhDNHB5VkVTWG9kTEd0bC14UkpKY1hIYmVYcl96NEp0YlVfckdzOFZPWkxRVVpmeGlFR3hXMmhIaUZqdDJLNV9lNkRZR0d6ZVg3Y0RvYkpfZm9HZDhLenZzSUJOWHYtWFdjT2hFU3BFQzlMelRlR2JnVy1aNkd0T3B4ckpqdlFhaFRLMVRyLW1mV3I3NjFoMFlxS0tYem9YUzI3d1Q1ZzFQcnl4VUFKeVg0Z3R2VlVZWkw2TjZRWVpIbVhkYTBYdHAzOGlMWVBaYUtzQWtzS3RSLV9wUHNwRjM5MS1DdGpiSF8ycDMxdlI2ZEpTR2htLVpaWGhIejE2Q1BjcEpIX3I5aGpZOVUxUlZ5TVk2X0JSaDgyRTdScmhoUXRuV3dyUFh3X3RNREdldXpSNVdZaTdzTnU1a09iRllNRnhwNTdPd2xBaWNkdnFGVV80NmNRd2tla0dKUDBDQUd2YWlWY09DRWUxVmE1TjRDbEdHdWszbTNSX0EiLCJwY3NFeHAiOiI3LzI2LzIwMjEgMzo1NTozMiBBTSIsImNvbXBhbnlJRCI6IjI0MzI5IiwiY29tcGFueUNvZGUiOiJQQ1NFWFA1NDY3IiwiY29tcGFueVByb2ZpbGVOYW1lRW5nIjoiU2hpcHBpbmcgQWdlbnQiLCJjb21wYW55UHJvZmlsZUNvZGUiOiJTQUciLCJPdGhlclByb2ZpbGVzIjoiRkZXLFRDUFIsU0hQUixDQSIsIklzUENTU3VwZXJVc2VyIjoiRmFsc2UiLCJJc0F1dGhvcml6ZWRVc2VyIjoiRmFsc2UiLCJFbWFpbCI6Imthdml0YS5tZW5vbkBtYXF0YS5hZSIsIlVzZXJOYW1lIjoiU2hhbWVlbSBQaWxhdGhvZGFuIiwiVXNlcklkIjoiMTE3MzAiLCJVc2VyQ29kZSI6InNoYW1lZW0ucGlsYXRob2RhbiIsIkNvbXBhbnlOYW1lIjoiTUlDQ08gTE9HSVNUSUNTIiwiVHJhZGVMaWNlbnNlTnVtYmVyIjoiIiwiVGVybWluYWxDb2RlIjoiIiwiVGVybWluYWxJRCI6IjAiLCJJc0Jvcm91Z2VEb2NDZW50ZXJVc2VyIjoiZmFsc2UiLCJJZCI6ImYxNWRhZjQyLTBlZTMtNDY5Ni05NWY0LTM3MTIzYTAxNTVhNiIsIlNlY3VyaXR5U3RhbXAiOiJjMDgxNmZkOC1hYjE3LTQ0OWMtODU0OS1jMmIyNTBlMGQ0YjQiLCJaQ0NvbnRhY3RJZCI6IiIsInVjSUQiOiIwMDIyNDIiLCJpc1N1cGVyVXNlciI6ImZhbHNlIiwiY29tcGFueVR5cGUiOiIiLCJpc0NGUyI6ImZhbHNlIiwiZXhwIjoxNjI3MjcxNzY0LCJpc3MiOiJNRy5BcHAuU2VjdXJpdHkiLCJhdWQiOiJNRy5BcHAuQXBwcGludG1lbnQuQXBpIn0.ab4WenjB80pzCAZwOpwTcDQ1G5ai_bl22U26cA-bzUM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "mq-api-version",
+								"value": "2 ",
+								"type": "text"
+							},
+							{
+								"key": "CCode",
+								"value": "PCSEXP5467 ",
+								"type": "text"
+							},
+							{
+								"key": "UCode",
+								"value": "shameem.pilathodan ",
+								"type": "text"
+							},
+							{
+								"key": "UPass",
+								"value": "784197735942753 ",
+								"type": "text"
+							},
+							{
+								"key": "PCode",
+								"value": "C031",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"AddUpdateDOBLRequestDTO\": {\r\n        \"CenterCode\": \"A\",\r\n        \"BillTypeCode\": \"I\",\r\n        \"BillTypeEngName\": \"\",\r\n        \"BillTypeArbName\": \"\",\r\n        \"DOClearingAgentCode\": \"C031\",\r\n        \"DOClearingAgentEngName\": \"\",\r\n        \"DOClearingAgentArbName\": \"\",\r\n        \"TempImportJob\": 0,\r\n        \"BHAgentCode\": \"\",\r\n        \"BHClearingAgentEngName\": \"\",\r\n        \"BHClearingAgentArbName\": \"\",\r\n        \"DOCargoAgentCode\": \"A187\",\r\n        \"DOCargoAgentEngName\": \"AGILITY (ABUDHABI)PJSC\",\r\n        \"DOCargoAgentArbName\": \"اجيليتى (ابوظبى ) ش م خ\",\r\n        \"DONumber\": null,\r\n        \"DODate\": null,\r\n        \"DOExpiryDate\": null,\r\n        \"CarAgentCode\": null,\r\n        \"CarAgentEngName\": null,\r\n        \"CarAgentArbName\": null,\r\n        \"KSACode\": \"\",\r\n        \"KSAEngName\": \"\",\r\n        \"KSAArbName\": \"\",\r\n        \"CargoTypeCode\": \"G\",\r\n        \"CargoTypeEng\": \"\",\r\n        \"CargoTypeArb\": \"\",\r\n        \"BHJobNumber\": \"\",\r\n        \"BHSharedVessel\": \"\",\r\n        \"UnitCode\": \"UNT\",\r\n        \"UnitNameEng\": \"UNIT\",\r\n        \"UnitNameArb\": \"وحدة ، مجموعة متكاملة\",\r\n        \"CompanyCode\": \"\",\r\n        \"UserCode\": \"\",\r\n        \"draft_id\": \"54276\",\r\n        \"service_code\": \"\",\r\n        \"uae_id\": \"\",\r\n        \"imp_code\": \"\",\r\n        \"ProfileCode\": \"C031\",\r\n        \"JobNumber\": \"\",\r\n        \"ChannelResult\": \"\",\r\n        \"BH_GCC_EXIT_CENT\": \"\",\r\n        \"BHCustBlType\": \"\",\r\n        \"CustomerBillNumber\": \"\",\r\n        \"RocTrans\": \"\",\r\n        \"OldJobNumber\": \"\",\r\n        \"FanrReferenceNumber\": \"\",\r\n        \"TIRREFNumber\": \"\",\r\n        \"StorageType\": \"S\",\r\n        \"VesselCode\": \"EY ETIHAD AIRWAYS \",\r\n        \"CargoTypeVal\": \"G\",\r\n        \"VoyageNumber\": \"GV05SEP2019I\",\r\n        \"PortCode\": \"THAILAND\",\r\n        \"HouseBLNumber\": \"1\",\r\n        \"Consignee\": \"DECO WOOD LLC\",\r\n        \"NetWeight\": \"1000\",\r\n        \"GrossWeight\": \"1000\",\r\n        \"Quantity\": \"10\",\r\n        \"Volume\": \"1000\",\r\n        \"GoodDesc\": \"GOODS DESCRIPTION\",\r\n        \"VoyageArrivalDate\": \"06/28/2021 19:37\",\r\n        \"ImporterCode\": \"404705\",\r\n        \"ImporterEngName\": \"AL MASAOOD HEWELLER L L C .\",\r\n        \"ImporterArbName\": \"مجوهرات المسعود ذ م م .\",\r\n        \"CurrencyCode\": null,\r\n        \"CurrencyEng\": null,\r\n        \"CurrencyArb\": null,\r\n        \"ShipperCode\": \"1\",\r\n        \"Shipper\": \"TEST\",\r\n        \"ATACarnetFlag\": \"Y\"\r\n    },\r\n    \"AddUpdateATACarnetRequestDTO\": {\r\n        // \"OldATACarnetNumber\": \"\",\r\n        // \"ATACarnetNumber\": \"12345\",\r\n        // \"ATAHolderAddress\": \"ABU DHABI\",\r\n        // \"RepresentedBy\": \"UAE\",\r\n        // \"CountryCode\": \"UAE\",\r\n        // \"CountryDescEng\": \"UNITED ARAB EMIRATES\",\r\n        // \"CountryDescArb\": \"الامارات العربية المتحدة\",\r\n        // \"IntendedGoodsCode\": \"2\",\r\n        // \"IntendedGoodsDescEng\": \"EXHIBITIONS GOODS\",\r\n        // \"IntendedGoodsDescArb\": \"ATTNEZZETURE PROFESSIOUELE\",\r\n        // \"IssuedDate\": \"06/01/2021\",\r\n        // \"IssuedBy\": \"GOVT\",\r\n        // \"ValidUntilDate\": \"06/01/2022\"\r\n    },\r\n    \"AddUpdateCustBillRequestDTO\": {\r\n        // \"CountCode\": \"DEU\",\r\n        // \"CountEngName\": null,\r\n        // \"CountArbName\": null,\r\n        // \"DestCountCode\": \"\",\r\n        // \"DestCountEngName\": null,\r\n        // \"DestCountArbName\": null,\r\n        // \"FromEmirates\": \"A\",\r\n        // \"ImportBillNumber\": null,\r\n        // \"Volume\": null,\r\n        // \"CreditCustCode\": null,\r\n        // \"CreditCustEngName\": null,\r\n        // \"CreditCustArbName\": null,\r\n        // \"Remarks1\": null,\r\n        // \"Remarks2\": null,\r\n        // \"VoucherType\": null,\r\n        // \"ExitPortCode\": \"\",\r\n        // \"PortEngName\": null,\r\n        // \"PortArbName\": null,\r\n        // \"GCCBillFlag\": null,\r\n        // \"GCCCenterCode\": \"\",\r\n        // \"GccCenterEngName\": null,\r\n        // \"GccCenterArbName\": null,\r\n        // \"BhGccExitCent\": null,\r\n        // \"Arabic1\": null,\r\n        // \"Arabic2\": null,\r\n        // \"Arabic3\": null,\r\n        // \"GCCNumber\": null,\r\n        // \"ExciseDecId\": null,\r\n        // \"FanrReferenceNumber\": null,\r\n        // \"TempImportJob\": null,\r\n        // \"CurrentYear\": 2021,\r\n        // \"OldJobNumber\": null,\r\n        // \"CustBillDate\": null,\r\n        // \"AuditorDate\": null,\r\n        // \"CustBillNumber\": 0,\r\n        // \"CustBillType\": \"I\",\r\n        // \"StatBillFlag\": null,\r\n        // \"MaqsaImportFlag\": null,\r\n        // \"GccYear\": null,\r\n        // \"ExitFlag\": null,\r\n        // \"ExitDate\": null,\r\n        // \"ExitRemarks\": null,\r\n        // \"ReleaseDate\": null,\r\n        // \"BhMohapRefNum\": null,\r\n        // \"BhEsmaRefNum\": null,\r\n        // \"BhValuationFlag\": null\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Customs/DeliveryOrder/SubmitAllDeclarationData",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Customs",
+								"DeliveryOrder",
+								"SubmitAllDeclarationData"
+							]
+						},
+						"description": "This request will fetch the all the list of DOs (SEA Transport Mode) available for the clearing agent by providing the agent code, HBL, MBL. This is same as \"GetShipmentList\" API from TAMM services."
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllDeclarationData",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"var size=0;\r",
+									"for (var count in responseBody) {\r",
+									"    if(responseBody.hasOwnProperty(count))\r",
+									"        size += 1;\r",
+									"}\r",
+									"console.log(\"BODY SIZE = \" + size); \r",
+									"\r",
+									"pm.test(\"Verify status code should be 200\", function () {\r",
+									"    pm.response.to.be.not.eql(null);\r",
+									"    pm.response.to.have.status(200);\r",
+									"\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);   \r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(30000);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJTSEFNRUVNLlBJTEFUSE9EQU4iLCJqdGkiOiIxMTIxZGUwZS03OTg0LTRkNTUtYmVhYi1iZGMyNjEzZjU1NTciLCJwY3NUa24iOiI0MUl6UTdkQjU5WmFxa2kxMExYT2JpRF9Mel9hbnc1Nnc2RWg1OExWWDRPQjZQczA2UTg2cGNLRlBFZUpzMk5VNFNXT1IxWXVnaUQ5ZWYxalF0NkhrUVlmUFpuakJUNTF3YzB3WlBmcFl2eVRYQlVic1NIUEc1by1sQjJ1SHNpWEZTQnk1Zkx5U0Z5SzBlV09sRGc0Y19Hb0ZPR2pTcmJvejdBUlF5Tm96eGFNTHh2NDBQbklKbGxwZHExbkhIWWE4blNSM0NGUHIxWjFyeHYxQ2V3SUMtRXkweEl0VHY4UGV0RW9rS0dVTUMyRUJwbzRCTlFuQ0ZEM3NCcXpHME9LeTc1ZC1YdERaSGV3T3ZtVUZESjJlakYzT1M0Z1hhUmRuc2c2VjdOWUpSTHBYUXRPdlYyRVVMWFJIU19yMVdvWGw0YnNub3Q4dHd4ZDJrd3BjejVTTTZ3cnd6a21FMVBwdy1fanpWem9kbXp0ZWxHeS1qVUYzNjk4Z0RCODQ5d2VPdHlnbUdvSVQ2Q0xuOGxyMGt1eUVfT2xVNDlWNENZcndLbFNGaXFZTzNEQUV1UDRBTGdrOHdjM0xZYm9UdTNCcWdlb3B3M3BzZzc2TWxTVERnY2VHanFhbDFaWVZBSURGVjdHSUxHZTZUM2ZiRTRFaV9sMGUydm9YRDhYMXBldkJINjROMzBFVUhEUmJqTlJlYlpxQ0NBSWhmbHNpekFZQVhtSTNkRDhRb2hLbk5tcTYySUJsWDZERmZNdmhNQ25XdHdMajlHVXVqRmF3a2JDeDNtMzNLdFQ2SjAzRkQzLUtNVC1kQndqUU9mMkk2eUJwWjh3aHdYUWdQQzBqckhla2lPYzZoRFdaalRwb05uZ1EzM2hVNV9YY1hQbWxIOHpwV1RWbk1mMGpmN0tQbEpwNzI4cjlPTEhKdmpqZEY3MTM4a3hxV2N1ZXh1X3d4dURBZHcxdk1nWXhRVTZxTGlGbUROMFRObDc2d3BCX0xrWDFmQTFFcWhkRUdIeURsMTYxXzk1b0QzMzc0OE1kNi15b3lNVE5qQmNtcmRyOFVnTGRCQXFUZFpuYVMyei16U3Jya0hSR3RacGZtUE1aRmhyS1NhX2l2VnExYV9Pam5sbjRldHAwMXR4VkVMeDhTSk1PaFBoZkl1cFNPekRLWWQzYjg5ZHZyZXFubmV3a2x6aCIsInBjc1J0a24iOiIwSko1ZGFRTnNRUkR0bFBWM3pYNjREQXNiS0VZY1VIYW1feTBZNXFOdG13dzNhRUNCWl8wWnoxVmZ3YTk5TlBVdl9lV1c2ckxKeUhwZWlFcXJ6ZzhIUWx3RDBNTVN6WDFkdzJRREprd1hKbE1qcV82dGp3NXExa1hRUXFIeDk5UTRsNXJZM0hVLW1mZUx3dTZ6b2dBLXlUeHkwVWNQaE5BOUs5NjBRTUhuUkg5LWhJMF9aRkNNZmJWODFQc2NQcVloVTV2QlJEQm51S1JrbVR4bFNHTTNhSVZkRVZHenBqbGFHa0FFNEQyWGprX2tuZmUzV3J3SkMwVVRoSVJQd1ZMQWx6bHFVWEJnSVlwd0JEWTVSaU81c083X3o2VDY2SEQyb2RrUmdzbHlrYXg3TDJBNF8xcFBzc2x6OVRIVkZlNmFsNTB6YlFVT0xnTndfckNMbzd3M19WZ0sxaktEMGt0czRvSHNxYU5fdlZQQ3hMWHRPd3RDRl9MZFJVSDFtUmJneXdYaTluVHV2U2hBbDFUdWRUOUhaUi04allBa21uUDdjZ0l6cDVaUDB3Q1BkcnNLazJfVW54bTROX216ZHUwb0ppVTU4NV9ueXZBaUpfaUk2Q210bldESWZWMjJTOWZobTZxQS1xS2FBM3drMWV6YmtDTmVfQUdhbDZENlc3ZjJjRzkwQ0dTZUFWY1pOTEcyQ3lxMlE2bkFuMzk2TUQ3bUYtOVN0OHVFUXI3REhDRGZkQzgxRTBKUF9Wd1FiLUt1eWpDQVZHZUNyVHZqWGtFZ2s3Y3p1eDBMN3NVeU9mb2JWNEVfeWh4U2o3WVZfVEd0V0p1bk5rSnROc3FTaE1IaGphS0xETzRaRWFNcWhZeU45MU8yUUlIaDlJWGh0YlFoS2RDZ0ppNVdUZWl4UWZqdkRXcHZCbWhOeWdEWEpiLUVoWWlFc2ViRVIwajVDWUtkck5DQ3lndjVhQld1TDJrRV9KZkgzLTY0N2NPRTJSZ0ZrbXN4VzB0U0JfTEp4eVhCXzg1RkhkVmtwXzF3RjJaekM5WFZDUXJIY29JZGxvWnpsVVJqT1Ruem1IUVpIc2VOUDhaT1BJZ1llVVBOZmFDNFRWcnZfZEFWVmpNN296MnJIZjVBRUd0QURIMFk2VWtONWQ4VEdZQnhBR1Utb2lxWF96bXBFZDROaWxOcnVjMyIsInBjc0V4cCI6IjcvMjcvMjAyMSA0OjAyOjU0IEFNIiwiY29tcGFueUlEIjoiMjQzMjkiLCJjb21wYW55Q29kZSI6IlBDU0VYUDU0NjciLCJjb21wYW55UHJvZmlsZU5hbWVFbmciOiJTaGlwcGluZyBBZ2VudCIsImNvbXBhbnlQcm9maWxlQ29kZSI6IlNBRyIsIk90aGVyUHJvZmlsZXMiOiJGRlcsVENQUixTSFBSLENBIiwiSXNQQ1NTdXBlclVzZXIiOiJGYWxzZSIsIklzQXV0aG9yaXplZFVzZXIiOiJGYWxzZSIsIkVtYWlsIjoia2F2aXRhLm1lbm9uQG1hcXRhLmFlIiwiVXNlck5hbWUiOiJTaGFtZWVtIFBpbGF0aG9kYW4iLCJVc2VySWQiOiIxMTczMCIsIlVzZXJDb2RlIjoic2hhbWVlbS5waWxhdGhvZGFuIiwiQ29tcGFueU5hbWUiOiJNSUNDTyBMT0dJU1RJQ1MiLCJUcmFkZUxpY2Vuc2VOdW1iZXIiOiIiLCJUZXJtaW5hbENvZGUiOiIiLCJUZXJtaW5hbElEIjoiMCIsIklzQm9yb3VnZURvY0NlbnRlclVzZXIiOiJmYWxzZSIsIklkIjoiZjE1ZGFmNDItMGVlMy00Njk2LTk1ZjQtMzcxMjNhMDE1NWE2IiwiU2VjdXJpdHlTdGFtcCI6ImMwODE2ZmQ4LWFiMTctNDQ5Yy04NTQ5LWMyYjI1MGUwZDRiNCIsIlpDQ29udGFjdElkIjoiIiwidWNJRCI6IjAwMjI0MiIsImlzU3VwZXJVc2VyIjoiZmFsc2UiLCJjb21wYW55VHlwZSI6IiIsImlzQ0ZTIjoiZmFsc2UiLCJleHAiOjE2MjczNTg2MDUsImlzcyI6Ik1HLkFwcC5TZWN1cml0eSIsImF1ZCI6Ik1HLkFwcC5BcHBwaW50bWVudC5BcGkifQ.egdmxDR1-bvcqtbJPkJCpObpufXl3fyiy74qfnw81GM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "mq-api-version",
+								"value": "2",
+								"type": "text"
+							},
+							{
+								"key": "CCode",
+								"value": "PCSEXP5467 ",
+								"type": "text"
+							},
+							{
+								"key": "UCode",
+								"value": "shameem.pilathodan",
+								"type": "text"
+							},
+							{
+								"key": "UPass",
+								"value": "784197735942753",
+								"type": "text"
+							},
+							{
+								"key": "PCode",
+								"value": "404705",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://10.0.131.21/ATLP/IC/API/api/Customs/DeliveryOrder/GetAllDeclarationData?draftId=54450 ",
+							"protocol": "http",
+							"host": [
+								"10",
+								"0",
+								"131",
+								"21"
+							],
+							"path": [
+								"ATLP",
+								"IC",
+								"API",
+								"api",
+								"Customs",
+								"DeliveryOrder",
+								"GetAllDeclarationData"
+							],
+							"query": [
+								{
+									"key": "draftId",
+									"value": "54450 "
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetCustBillInvoices",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"var size=0;\r",
+									"for (var count in responseBody) {\r",
+									"    if(responseBody.hasOwnProperty(count))\r",
+									"        size += 1;\r",
+									"}\r",
+									"console.log(\"BODY SIZE = \" + size); \r",
+									"\r",
+									"pm.test(\"Verify status code should be 200\", function () {\r",
+									"    pm.response.to.be.not.eql(null);\r",
+									"    pm.response.to.have.status(200);\r",
+									"\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifying the response has no errors\", function () {\r",
+									"    pm.expect(pm.response.json().Errorlst).to.eql(null);   \r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(30000);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJTSEFNRUVNLlBJTEFUSE9EQU4iLCJqdGkiOiJhYjZlYTA0NC0xNGMxLTQzNzUtYmY3Ny1mZDQ4NWFiMTIzMjUiLCJwY3NUa24iOiJyMkNkUVFta3VsYTFZQ0VIWUhkN2otSGlaejdFb0R5dzVwUFhMaHAtS2pOc3pLQTAyLS1mZzJ6c3kwdG9PRkRMY2h3UXFPMnNER0t0OXVVaFJzZXZYUlJCVzIzTzFMTl9tTFctSDhPVlY4aGhDeUpPMGdxakVhUEg3RFAtdU1MWjh1TEtvZmg0UEVIczZoTExSMnF0dlRLallEZWxNdTRwQTR2cnVFU2xua1NOT0VGQUVvMTN1NVZFMW44MVZSQncybHd4Ri1jdkprdkY1RFlRb25yamxmU0RwaHg2SXQ4OXNtWkc2b092ZGJUbnIxNGpXV0I1c1pHTDZJdzlzcTNwakR2M3A2ZEt5OHpCRnN4cHczcEFWdXdBdERzcWptZU80RFlOYkVNOVpwbDdpNFd6eFlXblNYNW11TlNURVk3cE1fSm9Vdjdxa1VuNkc5Y0ZjN2xVUmRnYndnekdud0M5RDI3c0VtTEJqMFFZcm1SMnBuWnJnTmd0V1VpVWVIWkx4bU81ekRqVk10VU1wRlNXdmhHUGQyaVJPSnJQRTZYekFYQzhZeTBpWjdkOFlCUmdfOHlDS0RWSWxRbzVuMEZwc19Ec1F5SmxUbWdZUFE1cUw0SkRHZW5hQlV1Um1VRWdwVXM5RzRZY1FGVUc1a3dfWVpKay0zeDY5RUlaU28wanBNVkNXWWN5eWtOS0NpX1VGRFcxNUZiLVRXLVgxQVVtXzdVZ01NTGJGOEhIcjBSenhtWWJidmQ3V0dleFFiTVVxdTI5LW9uWnRFWjhaQ0Z0UUk2b0Z1ZWJ2YUtQYlpLTlFQNVQ2VmFCeV9IcVZQNXBPTjdSeFFoTnVvRXdOYlpuZHpFNUxDWFNReElMTlhqQzVMWk1ZVmRHMlNFYWRXM1h6RExxN183ckE3UzZxcFB2UXdDQ1E0LXhGdDBBWVNMMkl4OUlBNGppV3B3UDdZMHBVUTZUZ2NIcElWWVJsUUxyNTRLaW5KcXpwcThZZGRxbXV6LW9qaWtSOVFpQUgtY3NPbnlLTW40NE14X3pYMjVsb3NwMVZrMWcwUVlQVXFRcXVVd1AyelVabHVqTF8xZlVMbFJmOFNPUllybWVIeUxDZ0hYME4zMm9fejJVUFp4bWdfVkxmUGp5a3pMQWMzX0VEOWNxV2VTVVdSLUZpaDk2XzNlYmprY2dPbk1vNnZieSIsInBjc1J0a24iOiJERDlSUVByLU42NXZ0SGVLY2Rzd0R0WEQxUjRwMXNFTThiTVR0NjNWa1RDQWpjVm1ydDRvSzV1RTQtV3FwYW5fTU1zUlNranBpblFOa2ZhS0t5emhuVW9LblEzdVpTTld1WFJOUFFMYUMzM3N2LWRnV1h0Q0JlLU1mWnB6SlpzNnBiUWgzdnh2b2JldnRzUE1ORjhUdG9KaWdZR1RpOWVpNHZCbmlYY0JTMDFJbDFrRUEyWnpKQ2VNZVJBaUZxWGNuakNfRWpSUmhqUVRPbFhob1pTT3A1aDBBaU9wempWT1RTZjU4R1kyTkd5czRCbDJNdl9GQWV5dEt6WmtuSEl5Y285T1ZKd1Q2NW1wQVRhUHhuWm1lVTAxM1BfaFJjQTNQQ0xMUmVLLTNMck81Zk9xTGwweW93UGVnb0tIRC1MdHJ2blMwMElheHJ6enhlakRSaEhKTW5DR2I3N0VIMHdjVURUZ3ZHbGtfTWdTd3k3bUJpQmExd0RmcmxfWFJwdEREVWZSaG1xT0xyYWw4b2hvbmRmbzU4eTRIanpZa3IxUUFuZzBjbjJBREJEQzBfdllRREItTkQ4WU50bFVOODlWUUNvVTVGbTdwMGxYbmhrNjlkUDE1N3hxRVdxbGVNSFlVTEV0NkVscDR0RmtTaG0xSUdYZkpmM0NWaVpOSXNQaWRzNUcxTGV1d2VKZExtOTl2Y3JfN05EMVRpZExXY2JybVFzanA3MTlySXZraEpnTFk0Z2dleGdfWjNrSVBVZWYyeFVLMUwtbzlReEJBYTFOMUV6a3pveFhIaTlLV3Fqb3M0MlI4ZV9HamxZZlVMNC1jbEFZa0xTVUFRTlhfU1dENTZLVkd4c1lfWVFtOVgtSXEwSHhoaGhuRlZCM2ZvOE80elI2ZGxxYXFDNWlfU0x5dEl3enBmc0Z5a0NFVHJLWGwzUWlKQWoyZUx1TUZ0V1NBV3g1Y1dnSlhhemVRUFd4TkZHNk4zSy1NOXR0a3hoU21RU0liaXZUWmJiR0J4UTJVckc2d2hfQXBibTRIMV9Cd0lrSFpPbWF1NGpOZlpSdml4RFFiUzNGTk9FRjJ2MnlsV1NldkF2YmFvWkU1MnN5ZEpDeENyX1NOOXpDQllrN2VEQWNDSkZNNm8yMXRMT05sb2JOTzJkS0gzRVZ4dmxhWm5KbXR1SkdvZ2w2RW9oayIsInBjc0V4cCI6IjcvMjgvMjAyMSA3OjA0OjU0IEFNIiwiY29tcGFueUlEIjoiMjQzMjkiLCJjb21wYW55Q29kZSI6IlBDU0VYUDU0NjciLCJjb21wYW55UHJvZmlsZU5hbWVFbmciOiJTaGlwcGluZyBBZ2VudCIsImNvbXBhbnlQcm9maWxlQ29kZSI6IlNBRyIsIk90aGVyUHJvZmlsZXMiOiJGRlcsVENQUixTSFBSLENBIiwiSXNQQ1NTdXBlclVzZXIiOiJGYWxzZSIsIklzQXV0aG9yaXplZFVzZXIiOiJGYWxzZSIsIkVtYWlsIjoia2F2aXRhLm1lbm9uQG1hcXRhLmFlIiwiVXNlck5hbWUiOiJTaGFtZWVtIFBpbGF0aG9kYW4iLCJVc2VySWQiOiIxMTczMCIsIlVzZXJDb2RlIjoic2hhbWVlbS5waWxhdGhvZGFuIiwiQ29tcGFueU5hbWUiOiJNSUNDTyBMT0dJU1RJQ1MiLCJUcmFkZUxpY2Vuc2VOdW1iZXIiOiIiLCJUZXJtaW5hbENvZGUiOiIiLCJUZXJtaW5hbElEIjoiMCIsIklzQm9yb3VnZURvY0NlbnRlclVzZXIiOiJmYWxzZSIsIklkIjoiZjE1ZGFmNDItMGVlMy00Njk2LTk1ZjQtMzcxMjNhMDE1NWE2IiwiU2VjdXJpdHlTdGFtcCI6ImMwODE2ZmQ4LWFiMTctNDQ5Yy04NTQ5LWMyYjI1MGUwZDRiNCIsIlpDQ29udGFjdElkIjoiIiwidWNJRCI6IjAwMjI0MiIsImlzU3VwZXJVc2VyIjoiZmFsc2UiLCJjb21wYW55VHlwZSI6IiIsImlzQ0ZTIjoiZmFsc2UiLCJleHAiOjE2Mjc0NTU5MjUsImlzcyI6Ik1HLkFwcC5TZWN1cml0eSIsImF1ZCI6Ik1HLkFwcC5BcHBwaW50bWVudC5BcGkifQ.T9DY6iSHGpr0ndX3Mf8JD6eTCYFwMqn7HGQbkORAraM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "mq-api-version",
+								"value": "2",
+								"type": "text"
+							},
+							{
+								"key": "CCode",
+								"value": "PCSEXP5467 ",
+								"type": "text"
+							},
+							{
+								"key": "UCode",
+								"value": "shameem.pilathodan",
+								"type": "text"
+							},
+							{
+								"key": "UPass",
+								"value": "784197735942753",
+								"type": "text"
+							},
+							{
+								"key": "PCode",
+								"value": "C031",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"GroupSerialNo\": 407802,\r\n    \"draft_id\": \"54422\",\r\n    \"uae_id\": \"\",\r\n    \"service_code\": \"\",\r\n    \"imp_code\": \"\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://10.0.131.21/ATLP/IC/API/api/Customs/Invoice/GetCustBillInvoices",
+							"protocol": "http",
+							"host": [
+								"10",
+								"0",
+								"131",
+								"21"
+							],
+							"path": [
+								"ATLP",
+								"IC",
+								"API",
+								"api",
+								"Customs",
+								"Invoice",
+								"GetCustBillInvoices"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "GetJobList_Revised",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verifying the response has no errors\", function () {\r",
+							"    pm.expect(pm.response.json().Errorlst).to.eql(null);   \r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Verifying that the response have at least one record \", function () {\r",
+							"    pm.expect(pm.response.json().Data[0].DraftId).not.to.eql(null);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "mq-api-version",
+						"value": "2.0",
+						"type": "text"
+					},
+					{
+						"key": "PCode",
+						"value": "404705",
+						"type": "text"
+					},
+					{
+						"key": "UCode",
+						"value": "shameem.pilathodan ",
+						"type": "text"
+					},
+					{
+						"key": "UPass",
+						"value": "784197735942753 ",
+						"type": "text"
+					},
+					{
+						"key": "x-descriptor",
+						"value": "{\"filter\":[{\"filterBy\":\"Center\",\"filterType\":\"equal\",\"value\":\"V\"}],\"Order\":{\"OrderBy\":\"JobCreatedDate\",\"OrderType\":\"desc\"},\"pagination\":{\"pageSize\":100,\"pageIndex\":1}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"profile\": \"CLEARING\",//IMPORTER, CLEARING\r\n    \"centerCode\": \"V\",\r\n    \"agentCode\": \"\",\r\n    \"doNumber\": \"336387\",\r\n    \"houseBLNumber\": \"336387\",\r\n    \"importerExporter\": \"\",\r\n    \"masterBLNumber\": \"336387\",\r\n    \"containerNumber\": \"\",\r\n    \"chassisNumber\": \"\",\r\n    \"SearchForDO\": false,\r\n    \"WildCardSearch\": \"3\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/Customs/Job/GetJobList_Revised",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"Customs",
+						"Job",
+						"GetJobList_Revised"
+					]
+				},
+				"description": "This request will fetch the all the list of DOs (SEA Transport Mode) available for the clearing agent by providing the agent code, HBL, MBL. This is same as \"GetShipmentList\" API from TAMM services."
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "draftID",
+			"value": ""
+		}
+	]
+}

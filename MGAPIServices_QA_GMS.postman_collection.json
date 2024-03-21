@@ -1,0 +1,89 @@
+{
+	"info": {
+		"_postman_id": "ea397f7a-cc7b-4adc-a04d-9b37fbf4a655",
+		"name": "MGAPIServices_QA_GMS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14307462"
+	},
+	"item": [
+		{
+			"name": "token",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "SOAPAction",
+						"value": "http://tempuri.org/BTDemo/ServiceTaks",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "text/xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "username=adtuser&password=P@ssw0rd&grant_type=password",
+					"options": {
+						"raw": {
+							"language": "text"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stagingpcsservice.maqta.ae/MGAPIServices_QA/token",
+					"protocol": "https",
+					"host": [
+						"stagingpcsservice",
+						"maqta",
+						"ae"
+					],
+					"path": [
+						"MGAPIServices_QA",
+						"token"
+					],
+					"query": [
+						{
+							"key": "wsdl",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DriverMaster",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\"?>\r\n<ns0:SetDriverMasterRequest xmlns:ns0=\"http://pcs.integration.mastertables/DriverDetails\">\r\n <ns0:MessageID>26458990</ns0:MessageID>\r\n <ns0:DriverID>2636</ns0:DriverID>\r\n <ns0:DriverName>Adil</ns0:DriverName>\r\n <ns0:DriverDOB>1988-01-01</ns0:DriverDOB>\r\n <ns0:JobTitle />\r\n <ns0:Pin>12345</ns0:Pin>\r\n <ns0:Special>N</ns0:Special>\r\n <ns0:CreationDate>2020-10-06 00:00:00</ns0:CreationDate>\r\n <ns0:StartDate>2021-10-03 00:00:00</ns0:StartDate>\r\n <ns0:Card_Num>173762AA</ns0:Card_Num>\r\n <ns0:CardStatus>P</ns0:CardStatus>\r\n <ns0:AddedBy>ashraf.issa</ns0:AddedBy>\r\n <ns0:Gender>M</ns0:Gender>\r\n <ns0:BadgeName>14423126 Khan Dost Liban</ns0:BadgeName>\r\n <ns0:ForeNames>14423126</ns0:ForeNames>\r\n <ns0:Address1>784197806864365</ns0:Address1>\r\n <ns0:Address2 />\r\n <ns0:Address3 />\r\n <ns0:PostCode />\r\n <ns0:Department />\r\n <ns0:HotStamp_Num>59629</ns0:HotStamp_Num>\r\n <ns0:Expiry_Date>2022-10-02</ns0:Expiry_Date>\r\n <ns0:CompanyCode>3078</ns0:CompanyCode>\r\n <ns0:Email />\r\n <ns0:Mobile>0509548965</ns0:Mobile>\r\n <ns0:EPassTokenNo>23110018729</ns0:EPassTokenNo>\r\n <ns0:PermitToPorts>FUJAIRAH</ns0:PermitToPorts>\r\n <ns0:PermitToPortsArea>FUJAIRAH</ns0:PermitToPortsArea>\r\n</ns0:SetDriverMasterRequest>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stagingpcsservice.maqta.ae/MGAPIServices_QA/MGMasterData/setDriverDetails",
+					"protocol": "https",
+					"host": [
+						"stagingpcsservice",
+						"maqta",
+						"ae"
+					],
+					"path": [
+						"MGAPIServices_QA",
+						"MGMasterData",
+						"setDriverDetails"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

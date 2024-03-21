@@ -1,0 +1,184 @@
+{
+	"info": {
+		"_postman_id": "a9f9ed92-1f5e-4963-8f76-a7beb5159893",
+		"name": "Fujairah_Customs_Hold_Release",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14307462"
+	},
+	"item": [
+		{
+			"name": "token",
+			"protocolProfileBehavior": {
+				"followOriginalHttpMethod": false,
+				"disableCookies": false,
+				"strictSSL": false,
+				"followAuthorizationHeader": false
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Postman-Token",
+						"value": "<calculate when request is sent>",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Content-Length",
+						"value": "<calculate when request is sent>",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Host",
+						"value": "<calculate when request is sent>",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "User-Agent",
+						"value": "PostmanRuntime/7.28.4",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Accept",
+						"value": "*/*",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip,deflate,br",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Connection",
+						"value": "Keep-alive",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "SOAPAction",
+						"value": "http://tempuri.org/BTDemo/ServiceTaks",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "text/xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "username=adtuser&password=P@ssw0rd&grant_type=password"
+				},
+				"url": {
+					"raw": "https://stagingpcsservice.maqta.ae/MGAPIServices_QA/token",
+					"protocol": "https",
+					"host": [
+						"stagingpcsservice",
+						"maqta",
+						"ae"
+					],
+					"path": [
+						"MGAPIServices_QA",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BE",
+			"protocolProfileBehavior": {
+				"followRedirects": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "8UuXFUJCgzRO0VxgS4PgU4BjO7GKbvuHbqheT1HMTQ4OZA4wLIXOJKDpRFoUt-HL0-fJKTDHkvAjJpXxxv4RXWamsQyaQPooisM_IIkWBxJQrQ6r-_JI-u6uEbLWGK-wYzxseF4VCMCCDWf1Cbiter0mkw0fXYYzMNrddLTsa3pBPyEkodhw3aFT7o2sNny4AtOowSXSIJkQd13NvwcYB0ZikKohkRa3CvA0ocVGfNRkKxlz9qzZl_-s37QcLaUacnL2jCxC7th_WMm_6xf1xYAfjZdNFnkOCOH3EkOy1Ip0U6qyKCKCo44H0SkfH3xe-Bi47yzvpHA6ohbKRyR7frUtEhHS909pGQC7HuuiDZCtwXZ8i5ZIGsS2Tfzf5kGemJu-JwxzOBm2hAXLcaP3UFiyvtz2AzZmPii3H6ftNaaarPprOYTz0VL0aixCD9EWAW4XRd6OvvFPdWAAPQa7Wi5QinTx9jInAFfQut31FG4",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "content-type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"transactionReference\": \"20210819010207HGTSF15F2EMO1XBQBITYA\",\r\n    \"decReference\": \"1254567\",\r\n    \"masterBL\": \"MSC1234567\",\r\n    \"houseBL\": \"HBL123\",\r\n    \"customsStatus\": \"RELEASE\",\r\n    \"voyageNumber\": \"VOY123\",\r\n    \"vesselCode\": \"VOY123\",\r\n    \"arrivalDate\": \"2021-09-01 09:10:00\",\r\n    \"centerCode\": \"\",\r\n    \"clearingAgentCode\": \"A1111\",\r\n    \"clearingAgentName\": \"ABC CLearingAgent\",\r\n    \"importerCode\": \"VOY123\",\r\n    \"importerName\": \"VOY123\",\r\n    \"exporterCode\": \"VOY123\",\r\n    \"exporterName\": \"VOY123\",\r\n    \"UOM\": \"KGM\",\r\n    \"BEDate\": \"2021-09-01\",\r\n    \"quantity\": \"1\",\r\n    \"weight\": \"30000\",\r\n    \"volume\": \"0\",\r\n    \"goodsDescription\": \"Description\",\r\n    \"marksNo\": \"\",\r\n    \"agentDONumber\": \"123455\",\r\n    \"grossWeight\": \"31000\",\r\n    \"portCode\": \"AEFJEA\",\r\n    \"containersList\": [\r\n      {\r\n        \"containerNumber\": \"MSC211345234\",\r\n        \"containerSize\": \"40\",\r\n        \"Seals\": \"SEL123\"\r\n        \r\n      },\r\n      {\r\n        \"containerNumber\": \"MSC882117238\",\r\n        \"containerSize\": \"40\",\r\n        \"Seals\": \"SEL123\"\r\n        \r\n      }\r\n    ],\r\n    \"BOEDetails\": {\r\n      \"billType\": \"I\",\r\n      \"year\": \"2021\",\r\n      \"countryCode\": \"AE\",\r\n      \"Invoices\": [\r\n        {\r\n          \"UOM\": \"KGM\",\r\n          \"UOMDescription\": \"KGM\",\r\n          \"HSCode\": \"1111111\",\r\n          \"HCodeDescription\": \"Plastic\",\r\n          \"quantity\": \"311\"\r\n        }\r\n      ]\r\n    },\r\n    \"originalChannel\": \"RED\",\r\n    \"overriddenChannel\": \"\",\r\n    \"overriddenChanneDT\": \"\",\r\n    \"RotationNumber\": \"\"\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stagingpcsservice.maqta.ae/MGAPIServices_QA/MGCustomsBEInfo/submitBEInfo",
+					"protocol": "https",
+					"host": [
+						"stagingpcsservice",
+						"maqta",
+						"ae"
+					],
+					"path": [
+						"MGAPIServices_QA",
+						"MGCustomsBEInfo",
+						"submitBEInfo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Inspection",
+			"protocolProfileBehavior": {
+				"strictSSL": false
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"transactionReference\": \"20210819010207HGTSF15F2EMO1XBQBITYA\",\r\n    \"decReference\": \"1234567\",\r\n    \"dateTime\": \"2021-08-11 09:00:00\",\r\n    \"containerNumber\": \"MSC123111677\",\r\n    \"category\": \"Import\",\r\n    \"customsStatus\": \"RELEASE\",\r\n    \"Comments\": \"This container is inspected. Free text field\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stagingpcsservice.maqta.ae/MGAPIServices_QA/MGCustomsBEInfo/submitContainerInspectionResult",
+					"protocol": "https",
+					"host": [
+						"stagingpcsservice",
+						"maqta",
+						"ae"
+					],
+					"path": [
+						"MGAPIServices_QA",
+						"MGCustomsBEInfo",
+						"submitContainerInspectionResult"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

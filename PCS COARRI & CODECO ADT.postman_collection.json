@@ -1,0 +1,472 @@
+{
+	"info": {
+		"_postman_id": "2bf142c8-f487-4db0-8c29-71005a0c7afb",
+		"name": "PCS COARRI & CODECO ADT",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14307462"
+	},
+	"item": [
+		{
+			"name": "CODECO Import",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Verify status code should be 200\", function () {\r",
+							"    pm.response.to.be.not.eql(null);\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
+							"});\r",
+							"\r",
+							"tests['Response latency is acceptable'] = responseTime < 5000;\r",
+							"// responseTime is in milliseconds\r",
+							"\r",
+							"pm.test(\"Check the active environment\", () => {\r",
+							"  pm.expect(pm.environment.name).to.eql(\"ATLP_IC_QA\");\r",
+							"});\r",
+							"\r",
+							"//if u have an id in ur response \r",
+							"pm.test(\"id is greater than 0\", function() {\r",
+							"\tvar jsonData = pm.response.jason();\r",
+							"\tpm.expect(jasonData.data.id).is.below(0);\r",
+							"\r",
+							"});\r",
+							"\r",
+							"var schema = {\r",
+							"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+							"  \"type\": \"object\",\r",
+							"  \"properties\": {\r",
+							"    \"Status\": {\r",
+							"      \"type\": \"string\"\r",
+							"    },\r",
+							"    \"ErrorCode\": {\r",
+							"      \"type\": \"string\"\r",
+							"    },\r",
+							"    \"ErrorDesc\": {\r",
+							"      \"type\": \"string\"\r",
+							"    },\r",
+							"    \"MaqtaReference\": {\r",
+							"      \"type\": \"string\"\r",
+							"    }\r",
+							"  },\r",
+							"  \"required\": [\r",
+							"    \"Status\",\r",
+							"    \"ErrorCode\",\r",
+							"    \"ErrorDesc\",\r",
+							"    \"MaqtaReference\"\r",
+							"  ]\r",
+							"}\r",
+							"var json = pm.response.json()\r",
+							"pm.test('schema is valid', function(){\r",
+							"    pm.expect(tv4.validate(json, schema)).to.be.true; \r",
+							"\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Content-Type is present\", function () \r",
+							"    {pm.response.to.have.header(\"Content-Type\"); });\r",
+							"\r",
+							"\r",
+							"var size=0;\r",
+							"for (var count in responseBody) {\r",
+							"    if(responseBody.hasOwnProperty(count))\r",
+							"        size += 1;\r",
+							"}\r",
+							"console.log(\"BODY SIZE = \" + size); \r",
+							"\r",
+							"pm.test(\"response size\", function () {\r",
+							"    pm.expect(pm.response.responseSize).to.be.equal(143);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Status is OK\", function(){     \r",
+							"     pm.response.to.have.property('status', 'OK'); \r",
+							"});//specific property and its value\r",
+							"\r",
+							"pm.test(\"Content-Type is present\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"});//checking whether the header has content-type or not.\r",
+							"\r",
+							"\r",
+							"pm.test(\"Successful POST request\", function () {      \r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200,201]);\r",
+							"});//Assert for Multiple Status Code\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"Success\"); \r",
+							"});//Assert on Response Text\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "1X9xLMDtyd3AVW88igLuJFY4u74H-RPr4hKRUH7xrCczJuiro-pR2iWawyhRkelf4QpaJcKGAXsTubs8bcThg8KsQ-KrtAnJJSoGiITgOJEgTKyOQAOZ07ShaIq-BrFANuMXmoC6gE7k3RqkqRQJNmYOHEmcTCnjCJ-kWpUlaQn7J9wGqE2nzBizcXKFjIoEtqThtg_YRyYhrHo6UHF_if30Ei38wEmJNrnaeIAU8rcc4UqG2hKBVneuy2WFAcKISPAhHFEDWNovaDxqK5GpEh-Rhk4fj7qXZL5fn-5G7dY76Q2EGdHrHZbwEZYkTwFn4oy_NOgtIVOj2KbX4yQV8e1UVTGgBdtYyY5bC-U7cF-LIFD6bKw9WlNmqbVP0Hg8UQQR4UhODVAvWxlqTZOcynZBw_KBcxYMJRxn_Vj8PzIouEPiGqXJECxF4OPDUdH2agQQb6TwA4PdeVKDd1nw4Q",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"CODECOList\": {\r\n    \"SenderCode\": \"ADTKP01\",\r\n    \"CODECO\": [\r\n      {\r\n        \"ID\": \"110223109\",\r\n      \"ContainerNumber\": \"TEMU0060406\",\r\n      \"FKind\": \"FCL\",\r\n      \"Type\": \"UNIT_DELIVER\",\r\n    //    \"FKind\": \"MTY\",\r\n    //    \"Type\": \"UNIT_RECEIVE\",\r\n        \"Category\": \"IMPRT\",\r\n        \"AppointmentReference\": \"5562995\",        \r\n        \"TruckNumber\": \"LP9194\",        \r\n        \"AppointmentStatus\": \"Used\",       \r\n        \"Location\": \"BRG\",       \r\n        \"Notes\": \"By user\",\r\n//      \"TAGID\": \"381068123\",\r\n        \"GateMovementDate\": \"2021-08-26T20:45:00\",\r\n        \"ContainerGrossWeight\": \"10000\",\r\n        \"ContainerMeasurementUnitID\": \"KGM\",\r\n        \"Grade\": \"B\",\r\n        \"PortOfLoading\": \"TRIZM\",\r\n        \"PortOfDischargeCode\": \"AEKHL\",\r\n        \"BillOfLoadingDocumentReference\": \"BLA006618\",\r\n    // \"BookingDocumentReference\": \"BLA006644\",\r\n        \"CargoAgentIdentifier\": \"MSC\",\r\n//       \"VGMWeight\": \"\",\r\n//       \"VGMMeasurementUnitId\": \"KGM\",\r\n        \"LineIdentifier\": \"MSC\",\r\n        \"ContainerSizeAndType\": \"22G1\",\r\n        \"MaritimeTransportDetails\": {\r\n          \"VoyageNumber\": \"VOY4555118\",\r\n          \"IMONumber\": \"8139302\",\r\n          \"VesselVisitID\": \"2102008560\",\r\n          \"ShippingLineCode\": \"MSC\",\r\n          \"LoadingPortCode\": \"\"\r\n        }\r\n      }\r\n    ]\r\n  }\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stagingpcsservice.maqta.ae/mgapiservices_QA/CODECO/ProcessCODECO",
+					"protocol": "https",
+					"host": [
+						"stagingpcsservice",
+						"maqta",
+						"ae"
+					],
+					"path": [
+						"mgapiservices_QA",
+						"CODECO",
+						"ProcessCODECO"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ProcessCOARRI",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "3kaa-2AnGNKA1VNiaZFsCbhNLNm72pZyFNe6omo9J2hhZtcG3amP734myLYAmKj2NqbX1mvSMUptETjIVTT-1qxIBR4M5Y9dTI5sKObwtF5O9NO_bCYfFLWGg6rHyMhF90vDVI9Y8mcaPccWpEypGvuzgmWJxdGa7XC5dBen49Il_TQay0tWqpTjXLFtXpoLtMuG0ERw6iDhbiANDZpJ2lJpbx2DGOSQ2cFQczXHt2UtCM2uyFs7__mZ52Gnaqq0j9WZaEsUrQdpOB_-DbsXMff5XleiW6a9mVxwYVGQWbXb8BV88ZiyCeBVBQMn_0XbygMPTX67KshUQ8p83UCnkcyIYsgxThb4akIb69zN0gVMmhEUPxhEN8jYsajy0b6MPzTfV7TICDspYd2DQDr5AY6vaPju-r2XhxyXBEXaruxOWA1uN8Y0zebN-qBdc5sTROaMzZfuRDJYPwOYt9fxLA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"COARRIList\": {\r\n    \"SenderCode\": \"ADTKP01\",\r\n    \"COARRI\": [\r\n      {\r\n        \"ID\": \"110223109\",\r\n        \"ContainerNumber\": \"TEMU5381245\",\r\n        \"OperationType\": \"UNIT_DISCH\",\r\n//       \"OperationType\": \"UNIT_TRSHP\",\r\n        \"Category\": \"IMPRT\", \r\n//      \"Category\": \"TRSHP\", \r\n        \"CargoAgentCode\": \"MSC\",\r\n        \"ShippingLineCode\": \"MSC\",\r\n        \"ContainerSizeTypeId\": \"22R1\",\r\n        \"DateOfMovement\": \"2021-11-09T15:16:00\",\r\n        \"PortOfLoadingCode\": \"TRIZM\",\r\n        \"PortOfDischargeCode\": \"AEKHL\",\r\n//      \"StwCell\": \"V-BAS3TDS02-140384\",\r\n        \"FKind\": \"FCL\",\r\n//       \"FKind\": \"MTY\",\r\n        \"ContainerGrossWeight\": \"7000\",\r\n        \"WeigthMeasurementUnit\": \"KGM\",\r\n        \"VGMWeight\": \"\",\r\n        \"VGMWeightUnit\": \"KGM\", \r\n        \"Grade\": \"B\",\r\n        \"MaritimeTransportDetails\": {\r\n        \"VoyageNumber\": \"FATH45563778\",\r\n          \"IMONumber\": \"8139302\",\r\n          \"VesselVisitID\": \"2102009086\",\r\n          \"ShippingLineCode\": \"MSC\",\r\n          \"LoadingPortCode\": \"TRIZM\",\r\n          \"ATA\": \"2020-10-05T06:30:00\",\r\n          \"ATD\": \"2020-10-05T06:30:00\"\r\n        }\r\n        //   \"DamageList\": {\r\n        //     \"Damage\": [\r\n        //     {\r\n        //      \"Severity\": \"MAJOR\",\r\n        //       \"Description\": \"LEAKING CONDITION FROM VESSEL\"\r\n        //     }\r\n        //    ]\r\n        // }\r\n      }\r\n    ]\r\n  }\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stagingpcsservice.maqta.ae//mgapiservices_QA/COARRI/ProcessCOARRI",
+					"protocol": "https",
+					"host": [
+						"stagingpcsservice",
+						"maqta",
+						"ae"
+					],
+					"path": [
+						"",
+						"mgapiservices_QA",
+						"COARRI",
+						"ProcessCOARRI"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "token",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "Username=adtuser&Password=P@ssw0rd&grant_type=password",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stagingpcsservice.maqta.ae/MGAPIServices_QA/token",
+					"protocol": "https",
+					"host": [
+						"stagingpcsservice",
+						"maqta",
+						"ae"
+					],
+					"path": [
+						"MGAPIServices_QA",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CODECO Export",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "Toc7amzxhM75DnuDVTD_oldSkxfT1_6N3kU3MDoJT-k6py_yqkEifhspljUbSVmQg61r1tJS79jYiUTS1sBjL3NGbpCrUrAX8G9lBNijtSnJV3clPWGsSgOeNKrBL7nQgU57jGSbDHiRtJ2QCjqv-iit-wjxI_cWl604MgM8CF4R43bezrOR52BXCdYAJGs50OcH4napJ7fmN_4GJIJRwxpCSFrue8zJKMvb4HmI7XKDz3CExVNuNvd5XKAlMcsGVzPqAPdA57YGm1BWPyYjrhxDb5_HZxJjwX40VX862TMc5wt0CSYFJJ0JWZkPnJGrsGLJO0D4aJb-SXSp5hJetawQvAuiqO_3aJ78h8Hnc4apXgaYfZRW3IEB7Xe-Ceyx8xyq-3jCbSLBmcnahv_YnUMwF45-3b9Xcl9vP1dXbXirnOrpYXKJoFX_FJa_Yvx0I0G7T7yRtvkRp6v0vsyVBw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"CODECOList\": {\r\n\"SenderCode\": \"ADTKP01\",\r\n\"CODECO\": [\r\n{\r\n\"ID\": \"252777486\",\r\n\"ContainerNumber\": \"CON5637745\",\r\n\"FKind\": \"MTY\",\r\n\"Type\": \"UNIT_DELIVER\",\r\n//\"Type\": \"UNIT_RECEIVE\",\r\n// \"FKind\": \"FCL\",\r\n// \"Type\": \"UNIT_RECEIVE\",\r\n\"Category\": \"EXPRT\",\r\n\"GateMovementDate\": \"2021-11-08T18:15:53.860\",\r\n\"ContainerGrossWeight\": \"27810\",\r\n\"ContainerMeasurementUnitID\": \"KGM\",\r\n\"Grade\": \"U\",\r\n\"PortOfLoading\": \"TRIZM\",\r\n\"PortOfDischargeCode\": \"AEKHL\",\r\n\"FinalPortOfDestination\": \"AEKHL\",\r\n// \"BillOfLoadingDocumentReference\": \"MEDUGH991929/BEANR\",\r\n\"CargoAgentIdentifier\": \"MSC\",\r\n\"VGMWeight\": \"27810\",\r\n\"VGMMeasurementUnitId\": \"KGM\",\r\n\"VGMRespParty\": \"Shipper\",\r\n\"LineIdentifier\": \"MSC\",\r\n\"AppointmentReference\": \"5570217\",\r\n\"TruckNumber\": \"LP9034\",\r\n\"AppointmentStatus\": \"USED\",\r\n\"TagID\": \"381067201\",\r\n// \"DeliveryOrderNbr\": \"6134992021\",\r\n\"BookingDocumentReference\": \"CRO56457865\",\r\n\"ContainerSizeAndType\": \"22G1\",\r\n\"DangerousGoods\": {},\r\n\"SealList\": {},\r\n\"DamageList\": {},\r\n\"MaritimeTransportDetails\": {\r\n\"VoyageNumber\": \"MGD0306343\",\r\n// \"Classification\": \"DEEPSEA\",\r\n\"VesselVisitID\": \"2102008555\",\r\n\"IMONumber\": \"8139302\",\r\n\"ShippingLineCode\": \"MSC\",\r\n\"Vessel\": \"KAAN SONAY\",\r\n\"LoadingPortCode\": \"AEKHL\"\r\n},\r\n\"BundledContainers\": {},\r\n\"TruckCompDetails\": {\r\n\"Code\": \"EL003\",\r\n\"Name\": \"EMIRATES LOGISTICS LLC\"\r\n}\r\n}\r\n]\r\n}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stagingpcsservice.maqta.ae/mgapiservices_QA/CODECO/ProcessCODECO",
+					"protocol": "https",
+					"host": [
+						"stagingpcsservice",
+						"maqta",
+						"ae"
+					],
+					"path": [
+						"mgapiservices_QA",
+						"CODECO",
+						"ProcessCODECO"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LOAD COARRI",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "2oxfeDT235SnPkDNdxeUgwcGJmj_eGVXRB3apW_Laska9SznujhulvAHJ-Iqn8LRjDMqdSKhtFJp5ckeDIuho7DmnED8FddftdXVvTeD5c_b8VcdEo8PbV9IEhYuWAwmF58LeJVZw_8Ce6m7pfQnljKm10RXSx00SM_DVdV2tmEi9XNsbvE45Cpvrll5ytEGpmzZgLwG8Kby3emB3JFZrzJmODpITIt-a8yk5Y5MeUnDozxo_9QUGZze2MiPcRuG8ooSioRlFA-o-hrKxZ0UddCJvg40RNIXisziuPz6vQWqwDyYZoeDQllzVU62og4tlWacX9U7Kp9RbCwJ0LaJRFmFG_gAKVjd8dnn1Y4Q4AbVqIaws9KFsTz65XOdDWyT_Js1m30fc-skFU2azQ-wSwFQr3uHnxRVRMpPXqoWbnRBM2KWV_cTFVkNYJVoMbjkLNIYvWamJWxQO361dwiaVg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"COARRIList\": {\r\n    \"SenderCode\": \"ADTKP01\",\r\n    \"COARRI\": [\r\n      {\r\n        \"ID\": \"110223109\",\r\n        \"ContainerNumber\": \"MEDU7427379\",\r\n        \"OperationType\": \"UNIT_LOAD\",\r\n        \"Category\": \"EXPRT\", \r\n        //\"Category\": \"TRSHP\", \r\n        \"CargoAgentCode\": \"MSC\",\r\n        \"ShippingLineCode\": \"MSC\",\r\n        \"ContainerSizeTypeId\": \"45G1\",\r\n        \"DateOfMovement\": \"2021-08-09T13:05\",\r\n        // \"DateOfMovement\": \"202106211700\",\r\n        \"PortOfLoadingCode\": \"AEKHL\",\r\n        \"PortOfDischargeCode\": \"AEKHL\",\r\n        \"FKind\": \"FCL\",\r\n        \"ContainerGrossWeight\": \"1000\",\r\n        \"WeigthMeasurementUnit\": \"KGM\",\r\n        \"VGMWeight\": \"28000\",\r\n        \"VGMWeightUnit\": \"KGM\",\r\n        // \"BookingNumber\": \"FAO4653784\",\r\n        \"Grade\": \"U\",\r\n        \"MaritimeTransportDetails\": {\r\n        \"VoyageNumber\": \"MGD03064452\",\r\n          \"IMONumber\": \"8139302\",\r\n          \"VesselVisitID\": \"2102007873\",\r\n          \"ShippingLineCode\": \"MSC\",\r\n          \"LoadingPortCode\": \"AEKHL\",\r\n          \"ATA\": \"2020-10-05T07:13:21.837\",\r\n          \"ATD\": \"2020-10-05T07:13:21.837\"\r\n        }\r\n      }\r\n    ]\r\n  }\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stagingpcsservice.maqta.ae//mgapiservices_QA/COARRI/ProcessCOARRI",
+					"protocol": "https",
+					"host": [
+						"stagingpcsservice",
+						"maqta",
+						"ae"
+					],
+					"path": [
+						"",
+						"mgapiservices_QA",
+						"COARRI",
+						"ProcessCOARRI"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Validate COARRI",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"LoadingUnloadingReport\":{\"MessageHeader\":{\"UniqueDocumentNumberId\":null,\"DocumentReference\":null,\"MessageDate\":\"2021-06-22T12:04:13\",\"DocumentFunction\":\"9\",\"SenderId\":\"ADTKP01\",\"RecipientId\":\"PCSA186\"},\"CargoAgentCode\":\"PCSA186\",\"ShippingLineCode\":\"PCSA186\",\"OperationType\":\"46\",\"LoadingPortCode\":\"AEKHL\",\"DischargePortCode\":\"AEKHL\",\"TerminalCode\":null,\"MaritimeTransportDetails\":{\"Vessel\":{\"IMONumber\":\"9690080\"},\"ShippingLineCode\":\"PCSA186\",\"VoyageNumber\":\"MG2804115901\",\"RotationNbr\":\"2102007804\"},\"ContainersByReport\":{\"Container\":[{\"ContainerNumber\":\"KHHD1115768\",\"ContainerSizeTypeId\":\"22G1\",\"ContainerStatusId\":\"2\",\"DateOfMovement\":\"000101010000\",\"PortOfLoadingCode\":\"AEKHL\",\"PortOfDischargeCode\":\"AEKHL\",\"BookingNumber\":\"FAO100520872\",\"FullEmptyID\":\"5\",\"GrossWeight\":{\"ContainerGrossWeight\":\"1000\",\"WeigthMeasurementUnitId\":\"KGM\"},\"ShippingLineCode\":\"PCSA186\",\"ShippingLineTerCode\":\"MSC\",\"VGM\":{\"Weight\":\"28000\",\"MeasurementUnitId\":\"KGM\"},\"DangerousGoods\":null,\"SealList\":null,\"Grade\":\"B\",\"FinalPortOfDestination\":null}]},\"VGMRespParty\":\"Terminal\",\"VGMRespName\":\"ADT\"}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://10.0.98.21/PCSServiceAPI/ApptEnhancement/api/COARRI/COARRI",
+					"protocol": "http",
+					"host": [
+						"10",
+						"0",
+						"98",
+						"21"
+					],
+					"path": [
+						"PCSServiceAPI",
+						"ApptEnhancement",
+						"api",
+						"COARRI",
+						"COARRI"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ADT ETA Update",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"MaqtaReference\": \"e76917f1-c9c9-41ae-957d-d262acb48ad0\",\r\n  \"BerthPlanRequest\": [\r\n    {\r\n      \"VesselVisitId\": \"2002007749\",\r\n      \"VesselIMO\": \"9484479\",\r\n      \"VesselAgentCode\": \"UASC\",\r\n      \"ETA\": \"2020-04-29T05:00:00\",\r\n      \"BerthDetails\": {\r\n        \"ETB\": \"2020-04-29T10:00:00\",\r\n        \"ETD\": \"2020-04-30T05:00:00\",\r\n        \"BerthNumber\": \"B4\",\r\n        \"BerthingSide\": \"STARBOARD\",\r\n        \"BerthingStatus\": \"BerthingStatus\",\r\n        \"BowBollardNumber\": \"B4/2\",\r\n        \"SternBollardNumber\": \"B4/20\",\r\n        \"LoadCount\": \"100\",\r\n        \"UnLoadCount\": \"100\"\r\n      }\r\n    }\r\n  ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stagingpcsservice.maqta.ae/MGAPIServices_QA/MQSubmit/BerthPlanning",
+					"protocol": "https",
+					"host": [
+						"stagingpcsservice",
+						"maqta",
+						"ae"
+					],
+					"path": [
+						"MGAPIServices_QA",
+						"MQSubmit",
+						"BerthPlanning"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CSP ETD Update",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"SetBerthPlanRequest\": {\r\n    \"MessageID\": \"202003041101053ehfskbD2gKSZGKxmQzckk\",\r\n    \"Sender\": \"KPCT2\",\r\n    \"BerthPlanList\": [\r\n      {\r\n        \"MGRotationNumber\": \"2002008166\",\r\n        \"ETB\": \"2020-05-17 23:38:49\",\r\n        \"ETD\": \"2020-05-17 23:38:49\",\r\n        \"DCT\": \"2020-05-17 23:38:49\",\r\n        \"BerthNumber\": \"B08\",\r\n        \"BerthingSide\": \"S\",\r\n        \"BowBollardNumber\": \"B08/721\",\r\n        \"SternBollardNumber\": \"B08/816\"\r\n      }\r\n    ]\r\n  }\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stagingpcsservice.maqta.ae /MGAPIServices_QA/BerthDetails/SetBerthPlan",
+					"protocol": "https",
+					"host": [
+						"stagingpcsservice",
+						"maqta",
+						"ae "
+					],
+					"path": [
+						"MGAPIServices_QA",
+						"BerthDetails",
+						"SetBerthPlan"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Validate CODECO",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"CodecoNotifications\":{\"MessageHeader\":{\"UniqueDocumentNumberId\":null,\"DocumentReference\":null,\"MessageDate\":\"2021-07-04T08:55:07\",\"DocumentFunction\":\"9\",\"SenderId\":\"ADTKP01\",\"RecipientId\":\"PCSA186\"},\"GateOperation\":\"IN\",\"RotationNumber\":null,\"BillOfLadingDocument\":{\"TypeOfDocument\":\"BILLOFLADINGNUMBER\"},\"BookingDocument\":{\"TypeOfDocument\":\"BOOKINGNUMBER\",\"DocumentReference\":\"CRO8756478\",\"BookingItemSequence\":null},\"MaritimeTransport\":{\"Vessel\":{\"IMONumber\":\"8139302\"},\"ShippingLIne\":{\"SCACCode\":\"MSC\",\"Code\":\"PCSA186\"},\"VoyageNumber\":\"20210215083140\"},\"PortOfLoading\":null,\"PortOfDischarge\":{\"TerminalCode\":null},\"CargoAgent\":{\"Qualifier\":\"CA\",\"Identifier\":\"PCSA186\"},\"Containers\":{\"Container\":{\"ContainerNumber\":\"CON13000055\",\"ContainerSizeAndType\":\"22G1\",\"FullEmptyIndicator\":\"4\",\"ContainerGrossWeight\":\"10000\",\"ContainerMeasurementUnitID\":\"KGM\",\"EquipmentStatus\":\"2\",\"GateMovementDate\":\"2021-07-04T10:00:00\",\"PortOfLoading\":{\"Locode\":\"AEKHL\"},\"PortOfDischarge\":{\"Locode\":\"BABAH\"},\"Grade\":\"U\",\"VGM\":null,\"BundledContainers\":null,\"DangerousGoods\":null,\"ShippingLine\":{\"SCACCode\":\"BEG\",\"Code\":\"PCSLAIDA\"}}},\"OperationType\":\"UNIT_RECEIVE\",\"FinalPortOfDestination\":null,\"TruckNumber\":\"LP9071\"}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://10.0.98.21/PCSServiceAPI/ApptEnhancement/api/CODECO/CODECO",
+					"protocol": "http",
+					"host": [
+						"10",
+						"0",
+						"98",
+						"21"
+					],
+					"path": [
+						"PCSServiceAPI",
+						"ApptEnhancement",
+						"api",
+						"CODECO",
+						"CODECO"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllMovementsByContainer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"ContainerNumber\": \"MAAU09793639\",\r\n\"FromDate\": \"2021-08-01\", //\"yyyy-MM-dd\"\r\n\"ToDate\": \"2021-08-15\" //\"yyyy-MM-dd\"\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://10.0.98.21/PCS.Integration.APIService.Internal/containerMovements/GetAllMovementsByContainer",
+					"protocol": "http",
+					"host": [
+						"10",
+						"0",
+						"98",
+						"21"
+					],
+					"path": [
+						"PCS.Integration.APIService.Internal",
+						"containerMovements",
+						"GetAllMovementsByContainer"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
